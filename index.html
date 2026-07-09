@@ -98,7 +98,49 @@
   .sheet table { width:100%; border-collapse:collapse; font:13px var(--sans); }
   .sheet td { padding:7px 6px; border-bottom:1px solid #e3e3e3; vertical-align:top; }
   .sheet td:last-child { text-align:right; font-family:var(--mono); font-weight:600; white-space:nowrap; padding-left:16px; }
+  #navOverlay { display:none; position:fixed; inset:0; z-index:8000; background:#14181c; color:var(--paint); flex-direction:column; align-items:center; gap:12px; padding:14px; overflow-y:auto; }
+  #navOverlay.show { display:flex; }
+  .nav-top { width:100%; max-width:480px; display:flex; align-items:center; justify-content:space-between; }
+  .nav-id { display:flex; align-items:center; min-width:0; }
+  .nav-label { display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; width:34px; height:34px; border-radius:50%; background:#ff8c42; color:#14181c; font:700 16px var(--mono); margin-right:10px; }
+  .nav-note { font:14px var(--sans); color:var(--paint); overflow:hidden; text-overflow:ellipsis; }
+  #navClose { flex-shrink:0; background:transparent; border:1px solid var(--hairline); color:var(--paint); border-radius:6px; width:34px; height:34px; font:16px var(--sans); cursor:pointer; }
+  .nav-state { width:100%; max-width:480px; text-align:center; font:600 14px var(--sans); padding:10px 12px; border-radius:8px; background:rgba(245,243,238,0.07); color:var(--muted); line-height:1.45; }
+  .nav-state.amber { background:rgba(255,178,71,0.16); color:#ffb247; }
+  .nav-state.green { background:rgba(61,220,132,0.14); color:#3ddc84; }
+  .nav-hero { font:700 64px var(--mono); line-height:1; display:flex; align-items:baseline; gap:8px; }
+  .nav-hero .nav-unit { font:600 20px var(--sans); color:var(--muted); }
+  .nav-arrow { width:84px; height:84px; color:var(--accent); }
+  .nav-arrow.off { display:none; }
+  .nav-chip { font:600 12px var(--mono); border:1px solid var(--hairline); border-radius:12px; padding:4px 12px; color:var(--muted); }
+  #navMap { width:100%; max-width:480px; height:220px; border:1px solid var(--hairline); border-radius:8px; flex-shrink:0; background:#0e1114; }
+  .nav-setout-btn { background:var(--accent); border:0; color:#14181c; font:700 14px var(--sans); border-radius:8px; padding:12px 22px; cursor:pointer; }
+  .nav-setout { width:100%; max-width:480px; font:13px var(--sans); line-height:1.7; background:rgba(245,243,238,0.06); border:1px solid var(--hairline); border-radius:8px; padding:10px 14px; }
+  .mk-text { text-align:left; width:110px; font:600 13px var(--sans); }
+  .mk-text.wide { flex:1; width:auto; }
+  .readout.mono { font-family:var(--mono); font-size:12px; }
+  .readout.ties { font-size:12px; line-height:1.6; }
+  .qp.armed { background:#ff5a5a; color:#14181c; border-color:#ff5a5a; }
+  #mbar, #toolsSheet, #moreSheet, #mFit { display:none; }
+  .imgmenu { display:none; position:fixed; z-index:1500; background:rgba(36,43,52,0.97); border:1px solid var(--hairline); border-radius:10px; padding:8px; max-height:62vh; overflow-y:auto; width:min(92vw,560px); box-shadow:0 8px 24px rgba(0,0,0,0.45); }
+  .imgmenu.show { display:block; }
+  .imgmenu .im-title { font:600 11px var(--sans); color:var(--muted); padding:4px 8px 2px; text-transform:uppercase; letter-spacing:0.4px; }
+  .imgmenu .im-note { font:11px var(--sans); color:var(--muted); padding:2px 8px 8px; line-height:1.35; }
+  .imgmenu .im-foot { padding:8px 8px 2px; }
+  .im-strip { display:flex; gap:8px; overflow-x:auto; padding:2px 2px 6px; scrollbar-width:thin; scrollbar-color:rgba(245,243,238,0.22) transparent; }
+  .im-card { flex:0 0 auto; width:92px; background:rgba(245,243,238,0.05); border:1px solid var(--hairline); border-radius:8px; padding:5px; display:flex; flex-direction:column; gap:5px; align-items:center; cursor:pointer; color:var(--paint); font:600 11px var(--sans); }
+  .im-card img { width:82px; height:82px; object-fit:cover; border-radius:5px; background:rgba(245,243,238,0.06); display:block; }
+  .im-card:hover { border-color:var(--accent); }
+  .im-card.active { border-color:var(--accent); color:var(--accent); box-shadow:0 0 0 1px var(--accent) inset; }
+
+  #tipbox { position:fixed; z-index:6000; background:#1c2229; color:var(--paint); border:1px solid var(--hairline); border-radius:6px; padding:5px 9px; font:12px var(--sans); pointer-events:none; opacity:0; transition:opacity .08s ease; white-space:nowrap; box-shadow:0 4px 14px rgba(0,0,0,0.4); max-width:280px; white-space:normal; }
+  #tipbox.show { opacity:1; }
+
+  /* phones-only: the mobile toolbar make-over */
+  /* phones: bottom action bar + one-sheet-at-a-time. Desktop (>=900px) untouched. */
+
   @media print {
+    #mbar, #toolsSheet, #moreSheet, #mFit { display:none !important; }
     @page { size:A4 portrait; margin:14mm; }
     html, body { background:#fff !important; }   /* the app's dark background otherwise bleeds onto the page where the sheet is short (e.g. below the bend close-up) */
     body.site-printing > *:not(#map) { display:none !important; }
@@ -184,6 +226,8 @@
   .numin::-webkit-outer-spin-button, .numin::-webkit-inner-spin-button { -webkit-appearance:none; margin:0; }
   .numin { -moz-appearance:textfield; }
   .numin:disabled { color:var(--muted); }
+  .numin.spin { width:76px; -moz-appearance:auto; appearance:auto; }
+  .numin.spin::-webkit-outer-spin-button, .numin.spin::-webkit-inner-spin-button { -webkit-appearance:auto; margin:0; }
   .unit { font:12px var(--mono); color:var(--muted); width:64px; }
   .unit.auto { width:auto; }
   .unit.tu { width:16px; flex-shrink:0; text-align:left; }
@@ -211,6 +255,7 @@
   .dim-label { background:rgba(18,22,26,0.85); border:0; box-shadow:none; color:var(--paint); font:11px var(--mono); padding:1px 5px; border-radius:3px; }
   .dim-label::before { display:none; }
   .handle-icon { background:transparent; border:0; }
+  .leaflet-interactive, .leaflet-marker-icon, .handle-icon, .rotate-zone { touch-action:none; }   /* let pointer-drag (mouse + touch) grab shapes, pins and handles instead of panning the map */
   .handle-icon .h { width:30px; height:30px; border-radius:50%; background:var(--accent); color:#14181c; display:flex; align-items:center; justify-content:center; font:700 15px var(--mono); border:2px solid #14181c; box-shadow:0 1px 4px rgba(0,0,0,0.5); touch-action:none; }
   .handle-icon.scale .h { background:var(--paint); }
   .handle-icon.anchor .h { background:#14181c; color:var(--accent); border:2px solid var(--accent); cursor:move; }
@@ -221,14 +266,17 @@
   .corner-handle.nwse .ch { cursor:nwse-resize; }
   .corner-handle.nesw .ch { cursor:nesw-resize; }
   .rotate-zone { background:transparent; border:0; }
-  .rotate-zone .rz { width:22px; height:22px; cursor:grab; }
+  .rotate-zone .rz { width:30px; height:30px; cursor:grab; }
   .rotate-zone.rz-tl .rz { cursor: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAADo0lEQVR4nO2W3U9bZRzHv8/v9PRNZKUUSmG1bOhgtVOw4cqZXghqFCZhovOFdSyNNRrnC3phoim6aDQLi/FlM16YmPgHGC8Ic4sJF2Muk1u92BLFKwl9kZWx9rw8Py96ajrTrHRjIzF8kufq/PJ8v7/fOd/nOcAWGwcBEJttArgNJgQAFYha624HAFtL4K4HB6ID26waulXCNiEAhahiKVCI4PH5T7oaPPPMLCrqa2JbpzgBkELAYIbXZJkEYK8QsnubvE9HIhGvIPsPk5OTB6anpzUABgCu1VUtFABmOBz2/vrbxSP39PS8eig+7lVtKhgMEoRsLouZmVn8cv5scSKRdHz37TdTRPS+lDsdwKXiOpusLi6EQJPP/4TjDk/m+fhhTqczzMwaMxfL67MvTmivvfmWZGapG4YWn0jkATxmdXfD34MihIDH1z7k8bXpM7OnysImM3M6nebl5TRnszl+5cjr/N7UB8zMkpm1y/k87xt5ip1ud5xTKbKmWBcCgNizd2+T3b3tyo+nzzAzG4ZhyNNnfuLhkf3cHtyx0tVz70qwc9ffuyP3a7lcjjOZDH9ybJq7w/etdEd6T3lb294NhWJO1B/NqCqEgM3uTh2cSEhm1nRdl/GJhKG6GtMAhgA0WqurqzvMo2MHuC3YuQwgBcBXb8fXdG/Zbd7VsyeTX11lZjbOzp9ju+vOK/39/W0KEcAsBIDWjmCy2b/9OIBBAA1EVN5AYP0pu7Z7hQgA3vnw42PMzNrVQsF8cnSsAGCo9CyqWgIiFAo5S67/nbINdYz8el+o025XAYDX1tbowoWFQiwWmx2VUgEWyvnmxcXFAgAbMyuWcM3sV3K9EUkpS/uYpgmX2yXm5ubcAC5XqTXWK/hfqkxghU4kTqoAiKg0yRafDySEAsARCHQ+2ti43WsV3/TFU8XApeJLXyd1AKtSSsyf+1m8mHwZfy0tOduDOy/qrL/tculFYKzubFejsgMCIH2BHQ8ZZmE44G/tBWhQ1zXzkYGHlb6+Xv33P/5UPzo69QaR+FTKB1RgQd8IE5VmKBKJ+B0NnvP7Rsc4m80Z+Xy+dMKZptwd6VsC0MJWAjZSvNIESFEAoX4/Hj/M1tFb/PzLrxjA8YoY3jIEALIpCgAMP/PcuKZpuvbsC4euAhgkIbBR778WiqIQADw+PLKfOzq7crFYrBzb2/XvF1WJCAAdbPZ3HEXpVruR4/WmIBICqdK1umlsqvgWW/y/+QdfHGZ3gE/zNAAAAABJRU5ErkJggg==") 16 16, grab; }
   .rotate-zone.rz-tr .rz { cursor: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAADnUlEQVR4nO2WXWhbZRjH/+/7npMva5e26dKPZcnsXNea+UEsIhvkZsNR2xo6g1/bYkuxoqDD6oXiSFEEZThh082JoOKN4I0gyLZWoYidMuZ2UcpgovRqZj1JVtN1yfl4Hy/OsYqzI20WitAfPBx4z+H8nw+e53mBNZYPA8BXU3zV4ACwM7ZzXWPzxu0AFGCzG4iptkGtpoMMAIiIeWv8k/5A8LjgHIIL2E/bmC2vLMcRpUxxZWRkxMW464u+ROLBqamp9qtaJg9AB0DOdzqAE4whR/YJByDLiuzmbHZz/mtJSpnemxoc/eTjE6X7H9ju7u7ejfq6ekiSYGAwTAOffvZ57tLFi0c7O+48Mj09nQMgAFhlBLkk3PFwd2pgqGCYpk5E8sWXXpZH3j+mE1HpH6ZrWpaeSg2S+zZ/ti4QfJjZNRErFReUTnOPz5fqSzxKfxQKREQ6EcmDo2/Q8y8coFwuT7OzGmmaRg4WEenfnDxF/kCT4Q+09FTiBAuH45769U2vt0fvPdXeeffcO4fepWw2S/l8njqi9+ihyJarbVvvmmsJbZrrTeyhsfHvyDRNSUTm6bFxcvnWXdu2Y0cd7FJX3CEBAOmmUGS2P/k4tbV3EoA2ALWO9ajeWi01MGQahiGJSN8/MCQVly9tZyGmrlRYAcAYAzjnAFADYFdDcMPh9a2hYac/meAcXV1dTS7v7dd+mDxDRGQW5udpy9ZtWQANTvgVZYE5zsCpK8LhsAeL6Y2pwnaw55H+ZPF6sWgRkf7W24cIwKv2uxuzUM4c+AsCYAJgRMQBsJmZmeLfr8+Z/RLiSjx+8uzZc8WFhQW3x+02XS4VADxL/XQlS4Vg97b57/MvAWtiYsLn9XmZZdntLyUBNxlIt2KrMQCord1Q39wceQiAmzMmGgMBW8CeJPzY0HEVmLtB7xat1aTweo2SQcYrLaE7Lv2eyXieGX4Ok2d+ZFJKAJh/9qNhA/il9J/eV05M5fxnQ0o68NrB0fc2RTYa589fUE+Pf2upqksAcuxy5soFRXi+1i7/9j3K3BPLgZEdTGNH9L4MWZYkIlkoFCiXy5t9/Uly1/h/ikajQUe8Gmt7sQ0PH/3gQ3L2g7UvNUhg6ldcLE7jat0ZkoLb82HXE3ufvq7rhv7Yk/t0AL2KLV6tyBdhABCPx5XWSFu+N7GHAHQLwYEKNuJyUQCIhmDrmwDfz5eYflUnnU5zpxyrdntedfE11vj/8Ccn8HFT5dBkDQAAAABJRU5ErkJggg==") 16 16, grab; }
   .rotate-zone.rz-bl .rz { cursor: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAADlUlEQVR4nO1WXUybVRh+zjn9KBTGSim0wEgZyIBaFKzczfRC0UUHYZuNv6xjwS3TOH/QRBNNmUuWLFOy+L/EmJjs2piYkOHIEi5gWaK3euESF28WQ3+GZWP9/h4v2ppqJrJCJSY8yXtzvvc7z/O+5z3ve4AtbGELa4PcVHIpBOLx+GaICGtSSgDyYL2v5SQABcDxX7ErpSQAPD40coAtbR3pSCRSIBflJBYApEMpABh66tlRXdcN/ZnnD60AGJRCAIiqcpJDKgUI7ZvR2GGStEhmP/rkcwKYUlICCGvlIpehUMjnrHFfGd4fZSqVNjOZDEnatCy7J9T/G4AG5nw35BiKN5EAbG/TzodM6/ZQk6+xD5CDhqFbjz7ysOrv7zN+ufardurk5GtSirO2/YAG/GBshIh/UvXm6fenOL9wWX/hyDFuq2swm1vbb3j9LbM+n686XwflKMZ7nOeOnNMAnDgzdZYksyTZ2R1aBtDQ1NT2WG3tDs9ftZaOO9zp7faLXxwzANi2TQDAYiIBm7QAZK9fvzZT5Mz1Clitu0kpcwEqpbBya4WRSORWNNeM/h65A3deX5eA27puAIBwuVz2wEC4cm5ubs/XUlpA2JEnE4FAoBKAKYSwkMtI4VvJEPm/63d19yYzy8skac4vXGZF1babAwMDfiUlQAoBoLGl9Wi9b8cUgEEANVLKwgYCpbftsCaEgKPCFT84Nm6T1A3DsGNj46ZWVZsAsBdAbd46OrqC3B99mv7WtkUAcQDe9WSgoF707t5dV+HafvO7i7MkaZqmaV+cvcShkQNsbt251NF971Jr264bPaH79XQ6zWQyydNnPmBX8L6lrlDfjKfR/04gEKlEiUeihBBwe5v3ur1+Y/rCDEnq+dbMRCLBxcUEU6k0Xzr+Kt+dfC/XMUn990yGwyNPstLlijE3xkueHUoIgTqv7wlntTv5XOwwE4lkQUi2YB9+/Kn+yutv2CRtwzT12Nh4BsCefNirviPWkhoFwAoGg54ff/r5eGd398uHYqMezaGBIKSQSKVTmJ6+gO+vzGfHxo86z3/15aSU8oRttzuBq9lSoy+GBP68Hh4AbyNXbHEAkwBOtXf2JIf3RQmhfTsxMVENQFtjgGuGAOAQAlBSFpmCkhJur++zqhr3AklR5P+vuJt7SgAmCWHRdgDh/PKSBK5amuY8/2Cg9y0hBJGfrHex94airM+11SA3k/z/iz8AZkdjkWb+YpsAAAAASUVORK5CYII=") 16 16, grab; }
   .rotate-zone.rz-br .rz { cursor: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAADhklEQVR4nO2WXWhbZRjH/+97cpom7do0TZu0XU1dv2vmBzF4sUFuNix1re1m8GMfsaVOpqBi9UJQUhWEMS2y+VUouOH9EASxaxV6sQ5v3K7KQBAvhDmaj7VpV3POyfv3IsdtVJC2JCtI//Bw4MA5v//zvO/zvC+wox3tqHSS20ZOJBJSCrEtJhwAtFp/04eAPCGlBBDW7xdcAEA0GnU0tbRm+gePEECfpkkA0O4DP6bZZT/4/LEX1wzDNJ594bgBoN+haUBhOUQJDYR1TUoAmDj3+VckmSOZPx4fIYT+rdTuFKEkJgQLP67rDj12k/m8Iqmy2SzT6Yw1cDhGZ6Xn51Ao5Me6SjiKww87NPmLCcWjQ0NP10+dv2BevXpNvzT7Y17XyzRAzbjcrmt/plY7ANy0TbA4bEAAMc3v91f4Ak2zjc17bu2qqbNeOnmKl+evGKc/niCAt0u5+AIAqqp2exsaWp4EUNfeFVphQbkzE58SwPuTJyd1oM25/uNiDAoCwPLyH+kbN36fBpBTZH4xmQQAKEUAUK9MnTKBalUMAwKFvl6/f0QM0KLR6O2122vU7F0v5X9PxM0YEDaUQog8ACsYDJbb7wUQdlyUMj83N9cbiYTL3W63AiAMwwSAvzbB+ZccAIQQQGG0ohLAwVr/7on6puaXBQCQQpMSkUgkUObatXp5/gpJWtmVFXZ07U0BqBV3k9iyfAASgeaWxcOx59ja2UMArQCq7Diku6qS8eFRyzRNRdI4MTyqHGXuhBACWzkTRDAYLffWB97tDD063dnz8NLpM58wlUoxk8mwO/SI0dzScau166GlxuYHl/oHj3Bm9idalqVIWpdmZlnmrl7du39/De4s0+akMZGQ5W53fGDwGS5nsyRpkFTvjX/AV197g+l0houLSSaTSbvrmCdpfP/DND2+gOnxNR4qZL/1w0jatnvjw6NZ07IMkur1N99SZz/7wrDn/T9hJJMpHo2P0FnhSdX4/E9tBL6BsrQ5pfwtp5RKHIuPjH89NZl7/Il9zr6+XnhrvFBUEBAwLRPnL3yT/vX69XM93e1nFxYW0jY8v9Xs7zWpj42NVUDo3w0MxbinvTsF4CMA4wASdrwDwCvuplTU25DdbRSuSs+8x+f/UpMSmtRQeBbChjtQoiNXAsCB8IHquoYH9hVAbc5Ce4V1AHqpwPeq5ICNSGA7r9z/O/0NDfFgB3wXKjQAAAAASUVORK5CYII=") 16 16, grab; }
   body.tool-ruler .leaflet-container, body.tool-ruler .leaflet-interactive,
   body.tool-gridorigin .leaflet-container, body.tool-gridorigin .leaflet-interactive,
-  body.tool-gridalign .leaflet-container, body.tool-gridalign .leaflet-interactive { cursor: crosshair; }
+  body.tool-gridalign .leaflet-container, body.tool-gridalign .leaflet-interactive,
+  body.tool-marker .leaflet-container, body.tool-marker .leaflet-interactive { cursor: crosshair; }
+  .mk-pin { filter:drop-shadow(0 2px 3px rgba(0,0,0,0.45)); }
+  .mk-pin.sel svg > path { stroke:#ffd23f; stroke-width:2.5; }
   body.tool-pen .leaflet-container, body.tool-pen .leaflet-interactive { cursor: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='28'%20height='28'%20viewBox='0%200%2028%2028'%3E%3Cpath%20d='M4%2024%20L8%2023%20L23%208%20L20%205%20L5%2020%20Z'%20fill='%23ffd23f'%20stroke='%2314181c'%20stroke-width='1.6'%20stroke-linejoin='round'/%3E%3C/svg%3E") 4 24, crosshair; }
   body.tool-select .leaflet-container { cursor: default; }
   body.tool-select .leaflet-interactive { cursor: grab; }
@@ -305,8 +353,6 @@
   .help:hover { color:var(--paint); border-color:var(--accent); }
   .panel header .right { display:flex; align-items:center; gap:8px; }
 
-  .expand-tab { display:none; position:fixed; top:58px; right:0; z-index:1001; width:30px; height:42px; align-items:center; justify-content:center; background:var(--panel); color:var(--accent); border:1px solid var(--hairline); border-right:0; border-radius:8px 0 0 8px; cursor:pointer; font:700 16px var(--mono); }
-
   .modal { position:fixed; inset:0; z-index:2000; background:rgba(8,10,12,0.62); display:none; align-items:center; justify-content:center; padding:20px; }
   .modal.show { display:flex; }
   .modal-card { background:#161b20; color:var(--paint); border:1px solid var(--hairline); border-radius:12px; max-width:440px; width:100%; padding:22px 22px 18px; }
@@ -341,6 +387,15 @@
   .tour-primary { background:var(--accent); color:#14181c; border-color:var(--accent); }
   .tour-ghost { background:transparent; color:var(--paint); border-color:var(--hairline); }
   .tour-skip { background:transparent; color:var(--muted); border:none; padding:7px 6px; font:500 12px var(--sans); cursor:pointer; }
+  /* help-cursor mode */
+  body.help-mode, body.help-mode *:not(input):not(textarea):not(select) { cursor:help !important; }
+  #helpHint { position:fixed; left:50%; bottom:24px; transform:translateX(-50%); z-index:7200; display:none; background:var(--accent); color:#14181c; font:600 12px var(--sans); padding:8px 16px; border-radius:20px; box-shadow:0 6px 20px rgba(0,0,0,0.4); pointer-events:none; white-space:nowrap; }
+  body.help-mode #helpHint { display:block; }
+  #helpHint .hh-narrow { display:none; }
+  #helpBubble { position:fixed; z-index:7201; display:none; max-width:300px; background:#161b20; color:#d7dade; border:1px solid var(--hairline); border-radius:10px; padding:11px 13px; font:13px/1.5 var(--sans); box-shadow:0 10px 28px rgba(0,0,0,0.5); pointer-events:none; }
+  #helpBubble b { display:block; font:600 13px var(--sans); margin-bottom:3px; color:var(--paint); }
+  .tour-help-launch { margin-top:14px; width:100%; padding:9px; border:1px solid var(--accent); border-radius:7px; background:transparent; color:var(--accent); font:600 12px var(--sans); cursor:pointer; }
+  .tour-help-launch:hover { background:var(--accent); color:#14181c; }
 
   @media (min-width:900px) {
     #map { left:0; right:0; }
@@ -374,6 +429,88 @@
     body.dock-collapsed .panel .body { display:none; }
   }
   @media (prefers-reduced-motion:reduce) { *, #map, .panel, .topbar, .flag { transition:none !important; } }
+  /* ===== mobile overrides — kept last so they win the cascade ===== */
+  @media (max-width:899.98px) {
+    .topbar { height:0; padding:0; border:0; background:transparent; overflow:visible; pointer-events:none; }
+    .topbar > :not(.ruler-hint) { display:none !important; }
+    .topbar .ruler-hint { position:fixed; left:50%; bottom:calc(76px + env(safe-area-inset-bottom,0px)); transform:translateX(-50%); z-index:1300; background:rgba(36,43,52,0.97); border:1px solid var(--hairline); border-radius:10px; pointer-events:auto; box-shadow:0 6px 18px rgba(0,0,0,0.4); white-space:nowrap; width:96vw; max-width:96vw; box-sizing:border-box; }
+    .topbar .ruler-hint .lead { flex:1 1 auto; min-width:0; overflow:hidden; text-overflow:ellipsis; }   /* shrink the instruction so Undo/Clear/Done are always fully on-screen */
+    .topbar .ruler-hint button { flex:0 0 auto; }
+    body.tool-ruler .map-note, body.tool-pen .map-note, body.tool-marker .map-note, body.tool-gridorigin .map-note, body.tool-gridalign .map-note { display:none; }   /* #5: keep the imagery note clear of the ruler/pen/marker/grid bars */
+    body.tool-ruler #mFit, body.tool-pen #mFit, body.tool-marker #mFit { display:none; }   /* #5: hide the Fit button while a hint bar is up, so Done/Use GPS aren't covered */
+    #helpHint { bottom:calc(76px + env(safe-area-inset-bottom,0px)); }      /* #1: lift the help hint above the bottom bar */
+    #helpHint .hh-wide { display:none; }                                   /* #1: show the phone-friendly help text (no Esc) */
+    #helpHint .hh-narrow { display:inline; }
+    .tour-keys, .tour-keys-h { display:none; }                             /* #1: keyboard shortcuts are meaningless on a phone */
+    .tour-help-launch { display:none; }                                    /* #1: hover-to-help is desktop-only (no hover on touch) — hide the entry; a proper mobile help is a design item */
+    body.msheet-add .drawer-tiles .tile { width:calc((100% - 21px)/3); }   /* #2: three templates per row */
+    .searchpill { top:10px; }
+    .substrip { display:none !important; }
+    .leaflet-control-zoom { display:none; }
+
+    #mbar { position:fixed; left:0; right:0; bottom:0; z-index:1500; display:flex; height:calc(64px + env(safe-area-inset-bottom,0px)); padding-bottom:env(safe-area-inset-bottom,0px); background:var(--panel); border-top:1px solid var(--hairline); }
+    .mb-btn { flex:1 1 0; min-width:44px; min-height:44px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; background:transparent; border:0; color:var(--muted); font:600 10px var(--sans); cursor:pointer; padding:6px 0; }
+    .mb-btn svg { width:22px; height:22px; }
+    .mb-btn:disabled { opacity:0.35; }
+    .mb-btn.on { color:var(--accent); }
+    .mb-btn.sel .mb-lbl::after { content:"●"; color:var(--accent); font-size:7px; margin-left:4px; vertical-align:2px; }
+
+    .panel { display:none; }
+    body.msheet-objects .panel { display:flex; top:auto; left:0; right:0; bottom:calc(64px + env(safe-area-inset-bottom,0px)); max-width:none; margin:0; height:52vh; max-height:52vh; border-radius:14px 14px 0 0; z-index:1400; }   /* steady height — the list fills into the space rather than the sheet resizing per object */
+    body.msheet-objects .panel .body { display:flex; }
+    /* --- Objects sheet: drill-in (list view <-> settings view) --- */
+    body.msheet-objects #pitchlist { display:block; flex:1 1 auto; min-height:0; overflow-y:auto; }
+    body.msheet-objects.mob-settings #editor { flex:1 1 auto; min-height:0; overflow-y:auto; }
+    body.msheet-objects .panel .pl-check, body.msheet-objects .panel .pl-acts, body.msheet-objects .panel .pl-bulk, body.msheet-objects .panel .pl-confirm { display:none !important; }   /* objects only — actions live in the object's settings */
+    body.msheet-objects:not(.mob-settings) #editor { display:none !important; }   /* list view */
+    body.msheet-objects.mob-settings #pitchlist { display:none; }                 /* settings view */
+    .pl-state { margin-left:auto; color:var(--muted); font-size:11px; display:none; }
+    body.msheet-objects .pl-state { display:inline; }
+    #mobBack { display:none; }
+    body.msheet-objects.mob-settings #mobBack { display:flex; align-items:center; gap:6px; width:100%; background:transparent; border:0; border-bottom:1px solid var(--hairline); color:var(--muted); font:600 11px var(--sans); letter-spacing:.05em; text-transform:uppercase; padding:9px 4px; cursor:pointer; }
+    #mobActs { display:none; }
+    body.msheet-objects.mob-settings #mobActs { display:flex; gap:8px; padding:10px 0 2px; }
+    #mobActs button { flex:1 1 0; background:rgba(245,243,238,0.05); border:1px solid var(--hairline); border-radius:8px; color:var(--paint); font:600 11px var(--sans); padding:9px 0; cursor:pointer; }
+    #mobActs button.on { border-color:var(--accent); color:var(--accent); }
+    #mobActs button.danger { color:#ff8f6b; }
+    #mobActs button.confirm { background:var(--warn); border-color:var(--warn); color:#1a1206; }
+    .drawer { display:none; }
+    body.msheet-add .drawer { display:flex; transform:none; top:auto; bottom:calc(64px + env(safe-area-inset-bottom,0px)); height:auto; max-height:58vh; border-radius:14px 14px 0 0; z-index:1400; }
+    body.msheet-add .drawer-tiles { flex-wrap:wrap; overflow-y:auto; overflow-x:hidden; height:min(396px, 56vh); box-sizing:border-box; align-content:flex-start; }   /* fixed 2-row height incl. each tile's Reference button: scrolls past 6, holds its size under 4 */
+
+    #toolsSheet, #moreSheet { position:fixed; left:0; right:0; bottom:calc(64px + env(safe-area-inset-bottom,0px)); z-index:1400; background:var(--panel); border-top:1px solid var(--hairline); border-radius:14px 14px 0 0; box-shadow:0 -10px 28px rgba(0,0,0,0.45); padding:4px 12px 14px; max-height:58vh; overflow-y:auto; }
+    body.msheet-tools #toolsSheet { display:block; }
+    body.msheet-more #moreSheet { display:block; }
+    .msheet-grab { width:44px; height:5px; border-radius:3px; background:rgba(245,243,238,0.25); margin:8px auto 12px; cursor:pointer; }
+    .mt-row { display:flex; gap:8px; }
+    .mt-btn { flex:1 1 0; min-height:64px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; background:rgba(245,243,238,0.05); border:1px solid var(--hairline); border-radius:10px; color:var(--paint); font:600 11px var(--sans); cursor:pointer; }
+    .mt-btn svg { width:22px; height:22px; }
+    .mt-btn.active { background:var(--accent); color:#14181c; border-color:var(--accent); }
+    .ms-sec { font:600 10px var(--sans); letter-spacing:.08em; text-transform:uppercase; color:var(--muted); padding:12px 2px 7px; }
+    .ms-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+    .ms-grid.ms-4 { grid-template-columns:repeat(4,1fr); }
+    .ms-grid.ms-2 { grid-template-columns:repeat(2,1fr); }
+    .ms-grid.ms-tail { margin-top:14px; }
+    .ms-item { min-height:62px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; background:rgba(245,243,238,0.05); border:1px solid var(--hairline); border-radius:10px; color:var(--paint); font:600 11px var(--sans); cursor:pointer; padding:8px 4px; }
+    .ms-item svg { width:20px; height:20px; color:var(--muted); flex:0 0 auto; }
+    .ms-item.on svg, .ms-item:active svg { color:var(--accent); }
+    .ms-item.ms-wide { flex-direction:row; min-height:46px; gap:8px; }
+    .ms-item:disabled { opacity:0.35; }
+    .ms-item.on { border-color:var(--accent); color:var(--accent); }
+
+    body.msheet-grid .substrip { display:flex !important; top:auto; left:0; right:0; transform:none; bottom:calc(64px + env(safe-area-inset-bottom,0px)); height:auto; border-radius:14px 14px 0 0; z-index:1400; padding:22px 10px 16px; }
+    body.msheet-grid .substrip::before { content:""; position:absolute; top:8px; left:50%; transform:translateX(-50%); width:44px; height:5px; border-radius:3px; background:rgba(245,243,238,0.25); }
+    body.msheet-grid .grid-bar { flex-wrap:wrap; gap:9px; justify-content:center; width:100%; }
+    body.msheet-grid .grid-bar button { min-height:44px; padding:8px 12px; }
+
+    #mFit { display:flex; position:fixed; right:10px; bottom:calc(80px + env(safe-area-inset-bottom,0px)); z-index:1200; width:46px; height:46px; border-radius:50%; align-items:center; justify-content:center; background:var(--panel); border:1px solid var(--hairline); color:var(--paint); box-shadow:0 4px 12px rgba(0,0,0,0.4); cursor:pointer; }
+    #mFit svg { width:20px; height:20px; }
+
+    .flag { bottom:calc(136px + env(safe-area-inset-bottom,0px)); left:50%; right:auto; transform:translateX(-50%); text-align:center; width:max-content; max-width:min(94vw,520px); }
+    .map-note { bottom:calc(104px + env(safe-area-inset-bottom,0px)); width:max-content; max-width:min(94vw,520px); }
+    body:not(.previewing):not(.site-printing) .leaflet-bottom.leaflet-right { bottom:calc(70px + env(safe-area-inset-bottom,0px)); }
+  }
+
 </style>
 </head>
 <body>
@@ -381,7 +518,7 @@
 
 
 <div class="topbar">
-  <div class="brand"><span class="dot"></span>LINEMARKER&nbsp;v1.22</div>
+  <div class="brand"><span class="dot"></span>LINEMARKER&nbsp;v1.28</div>
   <span class="tbar-div"></span>
   <div class="tbar-tools" id="cursorTools" aria-label="Cursor tools">
     <button class="tool active" id="toolSelect" type="button" title="Select / move" aria-label="Select tool">
@@ -395,6 +532,9 @@
     </button>
     <button class="tool" id="toolPen" type="button" title="Pen — draw free lines (e.g. spectator lines)" aria-label="Pen tool">
       <svg viewBox="0 0 24 24" fill="none"><path d="M4 20 L7.2 19 L19 7.2 L16.8 5 L5 16.8 Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M15.2 6.6 L17.4 8.8" stroke="currentColor" stroke-width="1.4"/></svg>
+    </button>
+    <button class="tool" id="toolMarker" type="button" title="Reference point — mark a spot the field crew can find on the ground" aria-label="Reference point tool">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M12 21 C12 21 5 13.5 5 8.8 A7 7 0 0 1 19 8.8 C19 13.5 12 21 12 21Z"/><circle cx="12" cy="9" r="2.4"/></svg>
     </button>
   </div>
   <span class="tbar-div"></span>
@@ -438,6 +578,9 @@
     </button>
     <button class="tool" id="zoomIn" type="button" title="Zoom in" aria-label="Zoom in">+</button>
     <button class="tool" id="zoomOut" type="button" title="Zoom out" aria-label="Zoom out">&minus;</button>
+    <button class="tool" id="imgBtn" type="button" title="Imagery date — pick an older aerial if clouds are in the way" aria-label="Imagery date">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M12 3 3 8l9 5 9-5-9-5Z"/><path d="M3 12.5l9 5 9-5"/><path d="M3 17l9 5 9-5"/></svg>
+    </button>
     <button class="tool" id="toolGrid" type="button" title="Grid — true-metre overlay" aria-label="Grid overlay">
       <svg viewBox="0 0 24 24" fill="none"><path d="M3 9 H21 M3 15 H21 M9 3 V21 M15 3 V21" stroke="currentColor" stroke-width="1.5"/></svg>
     </button>
@@ -454,6 +597,10 @@
     <button id="penUndo" type="button">Undo</button>
     <button id="penClear" type="button">Clear</button>
     <button id="penDone" type="button">Done</button>
+  </div>
+  <div class="ruler-hint" id="markerHint">
+    <span class="lead">Click the map to place a reference point</span>
+    <button id="gpsCapture" type="button" title="Drop a marker at this device's GPS position">Use GPS</button>
   </div>
   <button class="help" id="helpBtn" type="button" title="How to use LineMarker" aria-label="How to use">?</button>
 </div>
@@ -484,7 +631,9 @@
     <div class="pl-divider" id="plDivider" title="Drag to move the split"></div>
 
     <div class="editor" id="editor" style="display:none">
+      <button id="mobBack" type="button">‹ All objects</button>
       <div class="pl-head">Object settings</div>
+      <div id="mobActs"></div>
       <div class="pl-empty" id="editorEmpty">Select an object to edit its settings.</div>
       <div class="row" id="rowBearing">
         <label for="bearingSlider">Bearing</label>
@@ -512,6 +661,7 @@
       </div>
       <div class="row" id="rowScaleOut">
         <label id="scaleOutLabel">Size</label>
+        <input type="number" class="numin spin" id="sizeIn" step="0.1" value="0" aria-label="Size in metres" style="display:none">
         <span class="readout" id="scaleOutVal">—</span>
       </div>
       <div class="row" id="rowLength">
@@ -528,6 +678,35 @@
           <button class="swatch" type="button" data-c="#4da3ff" style="background:#4da3ff" aria-pressed="false" aria-label="Blue paint"></button>
           <button class="swatch" type="button" data-c="#ff5a5a" style="background:#ff5a5a" aria-pressed="false" aria-label="Red paint"></button>
         </div>
+      </div>
+      <div class="row" id="rowMkLabel">
+        <label for="mkLabel">Label</label>
+        <input type="text" id="mkLabel" class="numin mk-text" maxlength="3" aria-label="Marker label">
+      </div>
+      <div class="row" id="rowMkNote">
+        <label for="mkNote">Note</label>
+        <input type="text" id="mkNote" class="numin mk-text wide" maxlength="60" placeholder="e.g. NE fence corner" aria-label="What the field crew looks for on the ground">
+      </div>
+      <div class="row" id="rowMkCoords">
+        <label>Coords</label>
+        <span class="readout mono" id="mkCoords">—</span>
+      </div>
+      <div class="row" id="rowMkSource">
+        <label>Source</label>
+        <span class="readout" id="mkSource">—</span>
+      </div>
+      <div class="row" id="rowMkTies">
+        <label>Ties</label>
+        <div class="readout ties" id="mkTies">—</div>
+      </div>
+      <div class="row" id="rowMkFind">
+        <label></label>
+        <button class="qp" id="mkFind" type="button" title="Open the field navigator to walk to this point">Find on ground</button>
+        <button class="qp" id="mkDelete" type="button" title="Delete this marker">Delete</button>
+      </div>
+      <div class="row" id="rowPitchTies">
+        <label>Marker ties</label>
+        <div class="readout ties" id="pitchTies">—</div>
       </div>
       <div class="row" id="rowLanes">
         <label>Lanes</label>
@@ -576,7 +755,75 @@
 <div class="flag" id="flag">⚠ Plan includes a below-regulation pitch.</div>
 <div class="map-note" id="mapNote">Satellite imagery may be years out of date.</div>
 
-<button class="expand-tab" id="expandTab" type="button" title="Show panel" aria-label="Show panel">‹</button>
+<div class="imgmenu" id="imgMenu" role="menu" aria-label="Imagery date"></div>
+
+<div id="mbar" role="toolbar" aria-label="Actions">
+  <button class="mb-btn" id="mbAdd" type="button" title="Add — pick a template to drop on the map">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg><span class="mb-lbl">Add</span>
+  </button>
+  <button class="mb-btn" id="mbTools" type="button" title="Tools — switch between Select, Rotate, Ruler, Pen and Marker">
+    <svg viewBox="0 0 24 24" fill="none"><path d="M5 3 L5 19 L9.2 14.8 L12 21 L14 20 L11.2 14 L17 14 Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg><span class="mb-lbl" id="mbToolsLbl">Select</span>
+  </button>
+  <button class="mb-btn" id="mbObjects" type="button" title="Objects — list and edit everything on the plan">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="14" y2="18"/></svg><span class="mb-lbl">Objects</span>
+  </button>
+  <button class="mb-btn" id="mbUndo" type="button" title="Undo the last change" disabled>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 5 4 9l4 4"/><path d="M4 9h9a6 6 0 0 1 0 12h-2"/></svg><span class="mb-lbl">Undo</span>
+  </button>
+  <button class="mb-btn" id="mbMore" type="button" title="More — save, load, share, print, grid, imagery, help">
+    <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.9"/><circle cx="12" cy="12" r="1.9"/><circle cx="19" cy="12" r="1.9"/></svg><span class="mb-lbl">More</span>
+  </button>
+</div>
+
+<div id="toolsSheet" class="msheet" aria-label="Tool modes">
+  <div class="msheet-grab" title="Close"></div>
+  <div class="mt-row">
+    <button class="mt-btn" type="button" data-mtool="select"><svg viewBox="0 0 24 24" fill="none"><path d="M5 3 L5 19 L9.2 14.8 L12 21 L14 20 L11.2 14 L17 14 Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>Select</button>
+    <button class="mt-btn" type="button" data-mtool="rotate"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12 a8 8 0 1 1-2.3-5.6"/><path d="M20 4 v4 h-4"/></svg>Rotate</button>
+    <button class="mt-btn" type="button" data-mtool="ruler"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2.5" y="9" width="19" height="6" rx="1" transform="rotate(-25 12 12)"/><path d="M8 13.4 8.9 15.3M11.5 11.8 12.4 13.7M15 10.2 15.9 12.1" transform="rotate(-25 12 12)"/></svg>Ruler</button>
+    <button class="mt-btn" type="button" data-mtool="pen"><svg viewBox="0 0 24 24" fill="none"><path d="M4 20 L7.2 19 L19 7.2 L16.8 5 L5 16.8 Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>Pen</button>
+    <button class="mt-btn" type="button" data-mtool="marker"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M12 21 C12 21 5 13.5 5 8.8 A7 7 0 0 1 19 8.8 C19 13.5 12 21 12 21Z"/><circle cx="12" cy="9" r="2.4"/></svg>Marker</button>
+  </div>
+</div>
+
+<div id="moreSheet" class="msheet" aria-label="More actions">
+  <div class="msheet-grab" title="Close"></div>
+  <div class="ms-sec">Plan</div>
+  <div class="ms-grid ms-4">
+    <button class="ms-item" id="msSave" type="button" title="Save the plan as a file"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M5 4 H16 L19 7 V20 H5 Z"/><path d="M8 4 V9 H15 V4"/><rect x="8" y="13" width="8" height="7"/></svg><span class="ms-lbl">Save</span></button>
+    <button class="ms-item" id="msLoad" type="button" title="Load a saved plan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"><path d="M4 18 V6 a1 1 0 0 1 1-1 h4 l2 2 h7 a1 1 0 0 1 1 1 v1"/><path d="M3.5 18 L6 10 H21 L18.5 18 Z"/></svg><span class="ms-lbl">Load</span></button>
+    <button class="ms-item" id="msShare" type="button" title="Copy a link to this plan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><circle cx="18" cy="5" r="2.6"/><circle cx="18" cy="19" r="2.6"/><circle cx="6" cy="12" r="2.6"/><path d="M8.3 10.8 L15.7 6.2 M8.3 13.2 L15.7 17.8" stroke-linecap="round"/></svg><span class="ms-lbl">Share</span></button>
+    <button class="ms-item" id="msPrint" type="button" title="Print / save the site sheet as PDF"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M7 9 V3 H17 V9"/><path d="M7 17 H5 a2 2 0 0 1-2-2 V12 a2 2 0 0 1 2-2 H19 a2 2 0 0 1 2 2 v3 a2 2 0 0 1-2 2 H17"/><rect x="7" y="14" width="10" height="6.5"/></svg><span class="ms-lbl">Print</span></button>
+  </div>
+  <div class="ms-sec">View</div>
+  <div class="ms-grid ms-3">
+    <button class="ms-item" id="msGrid" type="button" title="Toggle the metre grid"><svg viewBox="0 0 24 24" fill="none"><path d="M3 9 H21 M3 15 H21 M9 3 V21 M15 3 V21" stroke="currentColor" stroke-width="1.5"/></svg><span class="ms-lbl">Grid off</span></button>
+    <button class="ms-item" id="msGridSet" type="button" title="Grid spacing, origin, align and snap" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.8 v2.6 M12 18.6 v2.6 M2.8 12 h2.6 M18.6 12 h2.6 M5.5 5.5 l1.9 1.9 M16.6 16.6 l1.9 1.9 M18.5 5.5 l-1.9 1.9 M7.4 16.6 l-1.9 1.9"/></svg><span class="ms-lbl">Grid settings</span></button>
+    <button class="ms-item" id="msImagery" type="button" title="Pick an older aerial if clouds are in the way"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M12 3 3 8l9 5 9-5-9-5Z"/><path d="M3 12.5l9 5 9-5"/><path d="M3 17l9 5 9-5"/></svg><span class="ms-lbl">Imagery date</span></button>
+  </div>
+  <div class="ms-grid ms-2 ms-tail">
+    <button class="ms-item ms-wide" id="msRedo" type="button" title="Redo" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7 L20 12 L15 17"/><path d="M20 12 H10 a5 5 0 0 0-5 5 v1"/></svg><span class="ms-lbl">Redo</span></button>
+    <button class="ms-item ms-wide" id="msHelp" type="button" title="Help and tour"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 9.2 a3 3 0 1 1 4.6 2.5 c-1 .7-1.6 1.3-1.6 2.5"/><circle cx="12" cy="17.6" r="0.4" fill="currentColor"/></svg><span class="ms-lbl">Help</span></button>
+  </div>
+</div>
+
+<button id="mFit" type="button" title="Fit — frame everything; tap again quickly to frame the selected object" aria-label="Fit view">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5"/></svg>
+</button>
+
+<div id="navOverlay" aria-hidden="true">
+  <div class="nav-top">
+    <div class="nav-id"><span class="nav-label" id="navLabel">A</span><span class="nav-note" id="navNote"></span></div>
+    <button id="navClose" type="button" aria-label="Exit navigator">✕</button>
+  </div>
+  <div class="nav-state" id="navState">Waiting for GPS…</div>
+  <div class="nav-hero"><span id="navDist">—</span><span class="nav-unit" id="navUnit"></span></div>
+  <div class="nav-arrow off" id="navArrow" aria-hidden="true"><svg viewBox="0 0 100 100"><path d="M50 6 L74 62 L50 48 L26 62 Z" fill="currentColor"/></svg></div>
+  <div class="nav-chip" id="navAcc">GPS ± — m</div>
+  <div id="navMap" aria-label="Mini map"></div>
+  <button class="nav-setout-btn" id="navSetoutBtn" type="button" style="display:none">Show setting-out</button>
+  <div class="nav-setout" id="navSetout" style="display:none"></div>
+</div>
 
 <div class="substrip" id="subStrip">
   <div class="grid-bar" id="gridBar">
@@ -600,6 +847,8 @@
   <div class="drawer-tiles" id="drawerTiles"></div>
 </div>
 
+<div id="helpHint"><span class="hh-wide">Point at a tool or panel for help. Esc to exit.</span><span class="hh-narrow">Tap a tool or panel for help.</span></div>
+<div id="helpBubble"></div>
 <div id="tourOverlay" aria-hidden="true">
   <svg id="tourMaskSvg" xmlns="http://www.w3.org/2000/svg">
     <defs><mask id="tourMaskDef">
@@ -730,6 +979,89 @@ const baseTiles = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/servi
 const refRoads = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Transportation/MapServer/tile/{z}/{y}/{x}",{maxZoom:21,maxNativeZoom:19,pane:"overlayPane",opacity:0.9}).addTo(map);
 const refPlaces = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}",{maxZoom:21,maxNativeZoom:19,pane:"overlayPane",opacity:0.95}).addTo(map);
 
+/* ===== imagery date picker — Esri Wayback archive (keyless, same source family as the live imagery) =====
+   Release IDs verified against the Wayback config 2026-07. Older dates help when the current capture has cloud cover. */
+const IMAGERY=[
+  {id:"latest", label:"Latest", url:"https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"},
+  {id:"10842", label:"May 2026"},
+  {id:"22869", label:"Mar 2026"},
+  {id:"22252", label:"Jan 2026"},
+  {id:"36557", label:"Jan 2025"},
+  {id:"41468", label:"Jan 2024"},
+  {id:"11475", label:"Jan 2023"},
+  {id:"42663", label:"Jan 2022"},
+  {id:"1049",  label:"Jan 2021"},
+  {id:"23001", label:"Jan 2020"},
+  {id:"6036",  label:"Jan 2019"},
+  {id:"8255",  label:"Mar 2018"}
+];
+const wbUrl=(id)=>"https://wayback.maptiles.arcgis.com/arcgis/rest/services/World_Imagery/MapServer/tile/"+id+"/{z}/{y}/{x}";
+let imageryId="latest";
+function setImagery(id){
+  const item=IMAGERY.find(x=>x.id===id)||IMAGERY[0];
+  imageryId=item.id;
+  baseTiles.setUrl(item.url||wbUrl(item.id));
+  document.getElementById("mapNote").textContent = item.id==="latest" ? "Satellite imagery may be years out of date." : "Archive imagery: "+item.label+".";
+  document.getElementById("imgBtn").classList.toggle("active", item.id!=="latest");
+  renderImgMenu();
+}
+function renderImgMenu(){
+  const m=document.getElementById("imgMenu");
+  // thumbnails + change-collapse are per-location: use the tile under the map centre
+  const z=Math.max(3,Math.min(map.getZoom()|0,17)), c=map.getCenter(), pt=map.project(c,z).divideBy(256).floor(), tx=pt.x, ty=pt.y;
+  const thumb=(it)=>(it.url||wbUrl(it.id)).replace("{z}",z).replace("{y}",ty).replace("{x}",tx);
+  const card=(it)=>'<button type="button" class="im-card'+(it.id===imageryId?' active':'')+'" data-img="'+it.id+'"><img loading="lazy" src="'+thumb(it)+'" alt=""><span>'+it.label+'</span></button>';
+  const strip=(items)=>'<div class="im-title">Imagery date</div><div class="im-note">Dates are when Esri published the map — the photo itself can be older.</div><div class="im-strip">'+items.map(card).join("")+'</div>';
+  m.innerHTML=strip(IMAGERY);   // instant render with every date; then collapse the no-change ones
+  if(!m.classList.contains("show")) return;   // menu closed (e.g. active-state refresh): no need to probe
+  const key=z+"/"+tx+"/"+ty;
+  const done=(list)=>{ if(m._imKey!==key || !m.classList.contains("show")) return; m.innerHTML=strip(list)+'<div class="im-note im-foot">Showing only dates that look different here.</div>'; };
+  m._imKey=key;
+  if(imgDedupCache[key]){ done(imgDedupCache[key]); return; }
+  // collapse dates that LOOK identical here: compare each date's own preview tile by pattern correlation
+  // (immune to the brightness/contrast tweaks between re-releases of the same photo; collapses hard only on real change)
+  const hashTile=(url)=>new Promise((res)=>{
+    const img=new Image(); img.crossOrigin="anonymous";
+    const t=setTimeout(()=>res(null),6000);
+    img.onload=()=>{ clearTimeout(t); try{
+      const cv=document.createElement("canvas"); cv.width=16; cv.height=16;
+      const cx=cv.getContext("2d"); cx.drawImage(img,0,0,16,16);
+      const d=cx.getImageData(0,0,16,16).data, g=new Array(256); let sum=0;
+      for(let i=0;i<256;i++){ const v=(d[i*4]+d[i*4+1]+d[i*4+2])/3; g[i]=v; sum+=v; }
+      const mean=sum/256; let ss=0;
+      for(let i=0;i<256;i++){ g[i]-=mean; ss+=g[i]*g[i]; }
+      const sd=Math.sqrt(ss/256)||1;
+      for(let i=0;i<256;i++) g[i]/=sd;   // normalised: brightness- and contrast-independent
+      res(g);
+    }catch(err){ res(null); } };   // canvas tainted (no CORS) or decode failure — can't verify
+    img.onerror=()=>{ clearTimeout(t); res(null); };
+    img.src=url;
+  });
+  const similar=(a,b)=>{ let r=0; for(let i=0;i<256;i++) r+=a[i]*b[i]; return (r/256)>=0.92; };   // pattern correlation
+  Promise.all(IMAGERY.map(it=>hashTile(thumb(it)))).then(hs=>{
+    if(hs.every(h=>h===null)){   // nothing verifiable — say so instead of silently showing everything
+      if(m._imKey===key && m.classList.contains("show")) m.insertAdjacentHTML("beforeend",'<div class="im-note im-foot">Couldn\u2019t compare the dates here \u2014 a privacy shield may be blocking image checks. Showing every date.</div>');
+      return;
+    }
+    const keep=[], kept=[];
+    IMAGERY.forEach((it,i)=>{
+      const h=hs[i];
+      if(h===null){ keep.push(it); return; }                                   // can't verify — keep it, honestly
+      if(kept.every(k=>!similar(k,h))){ kept.push(h); keep.push(it); }         // pattern genuinely differs here
+      else if(it.id===imageryId) keep.push(it);                                // never hide the date the plan is using
+    });
+    imgDedupCache[key]=keep; done(keep);
+  });
+}
+const imgDedupCache={};
+document.getElementById("imgBtn").addEventListener("click",(e)=>{
+  const m=document.getElementById("imgMenu"), show=!m.classList.contains("show");
+  m.classList.toggle("show",show);
+  if(show){ const r=e.currentTarget.getBoundingClientRect(); const w=Math.min(innerWidth*0.92,560); m.style.bottom=""; m.style.transform=""; m.style.top=(r.bottom+6)+"px"; m.style.left=Math.max(8,Math.min(r.left, innerWidth-w-8))+"px"; renderImgMenu(); }
+});
+document.getElementById("imgMenu").addEventListener("click",(e)=>{ const b=e.target.closest("[data-img]"); if(!b) return; setImagery(b.dataset.img); document.getElementById("imgMenu").classList.remove("show"); });
+document.addEventListener("mousedown",(e)=>{ const m=document.getElementById("imgMenu"); if(m.classList.contains("show") && !m.contains(e.target) && !e.target.closest("#imgBtn")) m.classList.remove("show"); });
+
 /* ===== search ===== */
 const searchForm=document.getElementById("searchForm"), searchInput=document.getElementById("searchInput"), searchBtn=document.getElementById("searchBtn"), resultsEl=document.getElementById("results");
 const searchPill=document.getElementById("searchPill"), searchToggle=document.getElementById("searchToggle");
@@ -751,8 +1083,15 @@ searchForm.addEventListener("submit",async(e)=>{
   try{
     const b=map.getBounds(); const viewbox=[b.getWest(),b.getNorth(),b.getEast(),b.getSouth()].join(",");
     const url="https://nominatim.openstreetmap.org/search?format=json&limit=6&addressdetails=1&countrycodes=gb&viewbox="+viewbox+"&bounded=0&q="+encodeURIComponent(q);
-    const res=await fetch(url,{headers:{"Accept":"application/json"}}); renderResults(await res.json());
-  }catch{ resultsEl.innerHTML='<div class="empty">Search unavailable — pan the map instead.</div>'; resultsEl.classList.add("show"); }
+    const res=await fetch(url,{headers:{"Accept":"application/json"}});
+    if(!res.ok) throw new Error("http "+res.status);
+    renderResults(await res.json());
+  }catch(err){
+    const msg = !navigator.onLine ? "You’re offline — search needs an internet connection."
+      : (err instanceof TypeError) ? "The search was blocked — likely an ad or privacy blocker. Allow nominatim.openstreetmap.org, or pan the map instead."
+      : "Search unavailable right now — pan the map instead.";
+    resultsEl.innerHTML='<div class="empty">'+msg+'</div>'; resultsEl.classList.add("show");
+  }
   finally{ searchBtn.disabled=false; searchBtn.textContent="Find"; }
 });
 const locBtn=document.getElementById("locBtn");
@@ -815,10 +1154,27 @@ function snapBearingToGrid(b){   // pull rotation square to the grid (gridBearin
   for(let k=0;k<4;k++){ const target=((gridBearing+k*90)%360+360)%360, diff=((b-target+540)%360)-180; if(Math.abs(diff)<=thr) return target; }
   return b;
 }
+function snapPointToGrid(ll){   // magnetic point snap: pull a free point onto nearby grid lines (pen vertices)
+  if(!(gridOn && snapOn) || !gridOrigin) return ll;
+  const sp=gridSpacing, thr=sp*0.22, g=latLngToLocal(gridOrigin,gridBearing,ll);
+  const d=(v)=>{ const t=Math.round(v/sp)*sp-v; return Math.abs(t)<=thr?t:0; };
+  const dx=d(g.x), dy=d(g.y);
+  return (dx||dy)? gridShiftLL(ll,dx,dy) : ll;
+}
+function snapPenPtsToGrid(pts){   // magnetic whole-line snap: pull the line's bbox onto grid lines (mirrors snapAnchorToGrid)
+  if(!(gridOn && snapOn) || !gridOrigin) return pts;
+  const sp=gridSpacing, thr=sp*0.22;
+  let minX=Infinity,maxX=-Infinity,minY=Infinity,maxY=-Infinity;
+  for(const pt of pts){ const g=latLngToLocal(gridOrigin,gridBearing,pt);
+    if(g.x<minX)minX=g.x; if(g.x>maxX)maxX=g.x; if(g.y<minY)minY=g.y; if(g.y>maxY)maxY=g.y; }
+  const best=(lo,hi)=>{ const dLo=Math.round(lo/sp)*sp-lo, dHi=Math.round(hi/sp)*sp-hi, d=Math.abs(dLo)<=Math.abs(dHi)?dLo:dHi; return Math.abs(d)<=thr?d:0; };
+  const dx=best(minX,maxX), dy=best(minY,maxY);
+  return (dx||dy)? pts.map(pt=>gridShiftLL(pt,dx,dy)) : pts;
+}
 function ringPts(cx,cy,r,a0,a1,step){ const out=[]; a0=a0??0; a1=a1??360; step=step||6; for(let a=a0;a<=a1+1e-6;a+=step){ const t=a*Math.PI/180; out.push([cx+r*Math.cos(t),cy+r*Math.sin(t)]); } return out; }
 
 /* ===== state ===== */
-let pitches=[], pens=[], selectedId=null, nextId=1;
+let pitches=[], pens=[], markers=[], selectedId=null, nextId=1;
 const PAINTS=["#f5f3ee","#ffd23f","#4da3ff","#ff5a5a"];
 const gridLayer=L.layerGroup().addTo(map);
 const geomLayer=L.layerGroup().addTo(map), handleLayer=L.layerGroup().addTo(map);
@@ -953,6 +1309,7 @@ function drawAll(){
   const ordered=[...vis.filter(p=>p.id!==selectedId), ...vis.filter(p=>p.id===selectedId)];
   for(const p of ordered) drawPitch(p);
   for(const pen of pens) if(!pen.hidden) drawPen(pen);
+  for(const mk of markers) if(!mk.hidden) drawMarker(mk);
   const sp=selected();
   if(sp && (sp.type==="football"||sp.type==="sprint") && sp.baselineOn) drawBaselineHint(sp);   // live baseline preview (only when the Baseline toggle is on)
   updateFlag();
@@ -962,8 +1319,8 @@ function drawPen(pen){
   const isSel=pen.id===selectedId;
   const pad=L.polyline(pen.pts,{color:"#000",weight:16,opacity:0,interactive:!pen.locked}).addTo(geomLayer);   // locked = clicks pass through
   if(!pen.locked){
-    pad.on("click",(e)=>{ L.DomEvent.stopPropagation(e); if(tool==="ruler") addRulerPoint(e.latlng); else if(tool==="pen") addPenPoint(e.latlng); else if(tool==="gridorigin"){ gridOrigin=e.latlng; drawGrid(); setTool("select"); } else if(tool==="gridalign") addAlignPoint(e.latlng); else selectPen(pen.id); });
-    if(isSel && tool==="select") pad.on("mousedown",(e)=>startPenDrag(pen,e));
+    pad.on("click",(e)=>{ L.DomEvent.stopPropagation(e); if(tool==="ruler") addRulerPoint(e.latlng); else if(tool==="pen") addPenPoint(e.latlng); else if(tool==="marker"){ addMarkerAt(e.latlng); } else if(tool==="gridorigin"){ gridOrigin=e.latlng; drawGrid(); setTool("select"); } else if(tool==="gridalign") addAlignPoint(e.latlng); else selectPen(pen.id); });
+    if(isSel && tool==="select") onHandleDown(pad,(e)=>startPenDrag(pen,e));
   }
   L.polyline(pen.pts,{color:pen.paint,weight:isSel?3.5:2.5,opacity:isSel?1:0.85,interactive:false}).addTo(geomLayer);
   if(isSel){
@@ -971,12 +1328,48 @@ function drawPen(pen){
     L.circleMarker(mid,{radius:0.01,opacity:0,fillOpacity:0,interactive:false}).bindTooltip(penLength(pen).toFixed(1)+" m",{permanent:true,direction:"top",offset:[0,-10],className:"dim-label"}).addTo(geomLayer);
   }
 }
+/* ===== reference markers ===== a marker ties the digital plan to a real spot on the ground */
+const MARKER_COLOR="#ff8c42";
+function nextMarkerLabel(){ const used=new Set(markers.map(m=>m.label)); for(let i=0;i<26;i++){ const l=String.fromCharCode(65+i); if(!used.has(l)) return l; } return "M"+(markers.length+1); }
+function addMarkerAt(latlng, source, accuracy){
+  const mk={ id:nextId++, kind:"marker", label:nextMarkerLabel(), note:"", anchor:L.latLng(latlng.lat,latlng.lng), source:(source==="gps"?"gps":"manual"), accuracy:(accuracy!=null?Math.round(accuracy*10)/10:null), hidden:false, locked:false };
+  markers.push(mk); setTool("select"); selectMarker(mk.id);
+  return mk;
+}
+function selectedMarkerObj(){ return markers.find(m=>m.id===selectedId)||null; }
+function selectMarker(id){ selectedId=id; removeHandles(); drawAll(); syncControls(); }
+function markerIcon(mk,isSel){
+  return L.divIcon({className:"mk-pin"+(isSel?" sel":""),iconSize:[30,42],iconAnchor:[15,40],html:
+    '<svg viewBox="0 0 30 42" width="30" height="42"><path d="M15 41 C15 41 3 24 3 14 A12 12 0 0 1 27 14 C27 24 15 41 15 41Z" fill="'+MARKER_COLOR+'" stroke="#14181c" stroke-width="1.5"/><circle cx="15" cy="14" r="8.5" fill="#14181c" opacity="0.25"/><text x="15" y="18.5" text-anchor="middle" font-family="monospace" font-weight="700" font-size="12" fill="#fff">'+mk.label+'</text></svg>'});
+}
+function drawMarker(mk){
+  const isSel=mk.id===selectedId;
+  if(mk.source==="gps" && mk.accuracy!=null)
+    L.circle(mk.anchor,{radius:mk.accuracy,color:MARKER_COLOR,weight:1,opacity:0.5,fillColor:MARKER_COLOR,fillOpacity:0.12,interactive:false}).addTo(geomLayer);
+  const m=L.marker(mk.anchor,{icon:markerIcon(mk,isSel),interactive:!mk.locked,zIndexOffset:800,keyboard:false}).addTo(geomLayer);
+  if(!mk.locked){
+    m.on("click",(e)=>{ L.DomEvent.stopPropagation(e); if(tool==="ruler") addRulerPoint(e.latlng); else if(tool==="pen") addPenPoint(e.latlng); else selectMarker(mk.id); });
+    if(isSel && tool==="select") onHandleDown(m,(e)=>startMarkerDrag(mk,e));
+  }
+  if(isSel) L.circleMarker(mk.anchor,{radius:7,color:"#ffd23f",weight:2,fill:false,interactive:false}).addTo(geomLayer);
+}
+function startMarkerDrag(mk,e){
+  if(tool!=="select") return;
+  L.DomEvent.stopPropagation(e);
+  const start=e.latlng, a0=L.latLng(mk.anchor.lat,mk.anchor.lng);
+  map.dragging.disable(); document.body.classList.add("grabbing");
+  const onMove=(ev)=>{ mk.anchor=L.latLng(a0.lat+(ev.latlng.lat-start.lat), a0.lng+(ev.latlng.lng-start.lng)); drawAll(); };
+  const onUp=()=>{ map.off("mousemove",onMove); map.off("mouseup",onUp); map.dragging.enable(); document.body.classList.remove("grabbing");
+    if(mk.source==="gps" && distMetres(a0,mk.anchor)>0.01){ mk.source="manual"; mk.accuracy=null; }   // a moved pin is no longer a GPS fix — stay honest
+    drawAll(); syncControls(); };
+  trackDrag(onMove,onUp);
+}
 function drawPitch(p){
   const P=makeP(p), meta=metaFor(p), isSel=p.id===selectedId, hb=meta.hitBox, tb=meta.tightBox;
   const pad=L.polygon([P(hb.x1,hb.y1),P(hb.x2,hb.y1),P(hb.x2,hb.y2),P(hb.x1,hb.y2)],{stroke:false,fill:true,fillOpacity:0,interactive:!p.locked}).addTo(geomLayer);   // locked = clicks pass through
   if(!p.locked){
-    pad.on("click",(e)=>{ L.DomEvent.stopPropagation(e); if(tool==="ruler") addRulerPoint(e.latlng); else if(tool==="pen") addPenPoint(e.latlng); else if(tool==="gridorigin"){ gridOrigin=e.latlng; drawGrid(); setTool("select"); } else if(tool==="gridalign") addAlignPoint(e.latlng); else selectPitch(p.id); });
-    if(isSel && (tool==="select"||tool==="rotate")) pad.on("mousedown",(e)=>startBodyDrag(p,e));
+    pad.on("click",(e)=>{ L.DomEvent.stopPropagation(e); if(tool==="ruler") addRulerPoint(e.latlng); else if(tool==="pen") addPenPoint(e.latlng); else if(tool==="marker"){ addMarkerAt(e.latlng); } else if(tool==="gridorigin"){ gridOrigin=e.latlng; drawGrid(); setTool("select"); } else if(tool==="gridalign") addAlignPoint(e.latlng); else selectPitch(p.id); });
+    if(isSel && (tool==="select"||tool==="rotate")) onHandleDown(pad,(e)=>startBodyDrag(p,e));
   }
   if(p.type==="rounders") drawRounders(p,isSel);
   else if(p.type==="football") drawShapes(p,isSel,buildFootball(FB[p.format]), {a:[-FB[p.format].L/2,-FB[p.format].W/2],b:[FB[p.format].L/2,-FB[p.format].W/2],c:[FB[p.format].L/2,FB[p.format].W/2]});
@@ -1049,6 +1442,20 @@ function drawRounders(p,isSel){
 }
 
 /* ===== handles ===== */
+function onHandleDown(layer,handler){   // start a drag from a Leaflet layer via POINTER events (mouse + touch) — Leaflet's layer mousedown doesn't fire during a touch-drag, so touch fell through to map-pan
+  const dom = layer._icon || layer._path || (layer.getElement && layer.getElement());
+  if(!dom) return;
+  L.DomEvent.on(dom,"pointerdown",(ev)=>{
+    if(ev.button>0) return;   // primary button, or any touch/pen — right-drag stays a map-pan
+    L.DomEvent.stop(ev);      // keep the map from starting its own pan
+    handler({ latlng: map.mouseEventToLatLng(ev), target: layer, originalEvent: ev });
+  });
+}
+function trackDrag(onMove,onUp){   // follow the move/up on the document so the finger or cursor can leave the handle
+  const move=(e)=>{ onMove({ latlng: map.mouseEventToLatLng(e) }); };
+  const up=()=>{ L.DomEvent.off(document,"pointermove",move); L.DomEvent.off(document,"pointerup",up); L.DomEvent.off(document,"pointercancel",up); if(onUp) onUp(); };
+  L.DomEvent.on(document,"pointermove",move); L.DomEvent.on(document,"pointerup",up); L.DomEvent.on(document,"pointercancel",up);
+}
 function startBodyDrag(p,e){
   if(tool!=="select") return;
   L.DomEvent.stopPropagation(e);
@@ -1056,11 +1463,16 @@ function startBodyDrag(p,e){
   map.dragging.disable(); document.body.classList.add("grabbing");
   const onMove=(ev)=>{ let na=L.latLng(a0.lat+(ev.latlng.lat-start.lat), a0.lng+(ev.latlng.lng-start.lng)); na=snapAnchorToGrid(p,na); p.anchor=na; drawAll(); positionHandles(null); };
   const onUp=()=>{ map.off("mousemove",onMove); map.off("mouseup",onUp); map.dragging.enable(); document.body.classList.remove("grabbing"); syncControls(); };
-  map.on("mousemove",onMove); map.on("mouseup",onUp);
+  trackDrag(onMove,onUp);
 }
 function handleIcon(glyph,cls){ return L.divIcon({className:"handle-icon"+(cls?" "+cls:""),iconSize:[30,30],iconAnchor:[15,15],html:'<div class="h">'+glyph+"</div>"}); }
 function cornerIcon(dir){ return L.divIcon({className:"corner-handle"+(dir?" "+dir:""),iconSize:[13,13],iconAnchor:[6.5,6.5],html:'<div class="ch"></div>'}); }
-function rotateZoneIcon(quad){ return L.divIcon({className:"rotate-zone rz-"+quad,iconSize:[22,22],iconAnchor:[11,11],html:'<div class="rz"></div>'}); }
+function rotateZoneIcon(quad){ return L.divIcon({className:"rotate-zone rz-"+quad,iconSize:[30,30],iconAnchor:[15,15],html:'<div class="rz"></div>'}); }
+function rotateZoneLL(P,cen,c){   // rotate hotspot at a fixed 20px diagonal offset outside the corner — findable at any zoom
+  const pc=map.latLngToContainerPoint(P(...c)), pn=map.latLngToContainerPoint(P(cen[0],cen[1]));
+  const vx=pc.x-pn.x, vy=pc.y-pn.y, m=Math.hypot(vx,vy)||1;
+  return map.containerPointToLatLng(L.point(pc.x+vx/m*20, pc.y+vy/m*20));
+}
 function cornerQuad(P,cen,c){ const a=map.latLngToContainerPoint(P(...c)), o=map.latLngToContainerPoint(P(...cen)); const x=a.x-o.x, y=a.y-o.y; return (y<0 ? (x<0?"tl":"tr") : (x<0?"bl":"br")); }   // which screen corner this is, so the arc wraps it (correct through any rotation)
 function startCentreRotate(p,e){   // Select-tool quick rotate: spin around the box centre, pivot restored afterwards
   if(tool!=="select") return;
@@ -1079,7 +1491,7 @@ function startCentreRotate(p,e){   // Select-tool quick rotate: spin around the 
     suppressMapClick=true; setTimeout(()=>{ suppressMapClick=false; },0);
     buildHandles(); drawAll(); positionHandles(null); syncControls();
   };
-  map.on("mousemove",onMove); map.on("mouseup",onUp);
+  trackDrag(onMove,onUp);
 }
 function cornerDir(P,cen,c){ const a=map.latLngToContainerPoint(P(...c)), o=map.latLngToContainerPoint(P(...cen)); return ((a.x-o.x)*(a.y-o.y)>=0)?"nwse":"nesw"; }   // diagonal cursor from actual screen position, so it's right at any rotation
 /* which types accept proportional corner scaling, and how it maps to their geometry */
@@ -1096,26 +1508,25 @@ function buildHandles(){
   cornerHandles.length=0; rotateZones.length=0;
   if(tool==="rotate"){
     moveHandle=L.marker(p.anchor,{icon:handleIcon("⊕","anchor"),interactive:true,zIndexOffset:1100,keyboard:false}).addTo(handleLayer);
-    moveHandle.on("mousedown",(e)=>startAnchorMove(p,e));
+    onHandleDown(moveHandle,(e)=>startAnchorMove(p,e));
     rotateHandle=L.marker(P(...meta.rotateArm),{icon:handleIcon("↻"),interactive:true,zIndexOffset:1000,keyboard:false}).addTo(handleLayer);
-    rotateHandle.on("mousedown",(e)=>startRotate(p,e));
+    onHandleDown(rotateHandle,(e)=>startRotate(p,e));
   } else {
     moveHandle=null; rotateHandle=null;
   }
   if(tool==="select"){
     const hb=meta.tightBox, cp=[[hb.x1,hb.y1],[hb.x2,hb.y1],[hb.x2,hb.y2],[hb.x1,hb.y2]];
-    const cen=[(hb.x1+hb.x2)/2,(hb.y1+hb.y2)/2], f=1.18;
-    cp.forEach((c)=>{   // rotate zone just outside each corner — every pitch can rotate, scalable or not
-      const z=[cen[0]+(c[0]-cen[0])*f, cen[1]+(c[1]-cen[1])*f];
-      const h=L.marker(P(...z),{icon:rotateZoneIcon(cornerQuad(P,cen,c)),interactive:true,zIndexOffset:900,keyboard:false}).addTo(handleLayer);
-      h.on("mousedown",(e)=>startCentreRotate(p,e));
+    const cen=[(hb.x1+hb.x2)/2,(hb.y1+hb.y2)/2];
+    cp.forEach((c)=>{   // rotate zone just outside each corner (fixed pixel offset) — every pitch can rotate, scalable or not
+      const h=L.marker(rotateZoneLL(P,cen,c),{icon:rotateZoneIcon(cornerQuad(P,cen,c)),interactive:true,zIndexOffset:900,keyboard:false}).addTo(handleLayer);
+      onHandleDown(h,(e)=>startCentreRotate(p,e));
       rotateZones.push(h);
     });
     const sk=scaleKind(p);
     if(sk){
       cp.forEach((c,i)=>{
         const h=L.marker(P(...c),{icon:cornerIcon(cornerDir(P,cen,c)),interactive:true,zIndexOffset:1000,keyboard:false}).addTo(handleLayer);
-        h.on("mousedown",(e)=>startCornerScale(p,sk,i,e));
+        onHandleDown(h,(e)=>startCornerScale(p,sk,i,e));
         cornerHandles.push(h);
       });
     }
@@ -1155,7 +1566,7 @@ function startCornerScale(p,kind,i,e){
     };
   }
   const onUp=()=>{ map.off("mousemove",onMove); map.off("mouseup",onUp); map.dragging.enable(); document.body.classList.remove("grabbing"); suppressMapClick=true; setTimeout(()=>{ suppressMapClick=false; },0); syncControls(); };
-  map.on("mousemove",onMove); map.on("mouseup",onUp);
+  trackDrag(onMove,onUp);
 }
 function startRotate(p,e){
   if(tool!=="rotate") return;
@@ -1164,7 +1575,7 @@ function startRotate(p,e){
   map.dragging.disable(); document.body.classList.add("grabbing");
   const onMove=(ev)=>{ rotateDragLL=ev.latlng; p.bearing=snapBearingToGrid(Math.round((bearingBetween(p.anchor,ev.latlng)-phi)*2)/2); drawAll(); if(rotateHandle) rotateHandle.setLatLng(ev.latlng); positionHandles("rotate"); syncControls(); };
   const onUp=()=>{ map.off("mousemove",onMove); map.off("mouseup",onUp); map.dragging.enable(); document.body.classList.remove("grabbing"); rotateDragLL=null; suppressMapClick=true; setTimeout(()=>{ suppressMapClick=false; },0); drawAll(); positionHandles(null); syncControls(); };
-  map.on("mousemove",onMove); map.on("mouseup",onUp);
+  trackDrag(onMove,onUp);
 }
 function snapPoints(p){ const tb=metaFor(p).tightBox, cx=(tb.x1+tb.x2)/2, cy=(tb.y1+tb.y2)/2;
   const pts=[[tb.x1,tb.y1],[cx,tb.y1],[tb.x2,tb.y1],[tb.x2,cy],[tb.x2,tb.y2],[cx,tb.y2],[tb.x1,tb.y2],[tb.x1,cy],[cx,cy]];
@@ -1184,7 +1595,7 @@ function startAnchorMove(p,e){
     for(const s of snaps){ const d=distMetres(P(...s),ev.latlng); if(d<bd){ bd=d; best=s; } }
     chosen=best; setOrigin(p,best); drawAll(); positionHandles(null); showSnapDots(p,best); };
   const onUp=()=>{ map.off("mousemove",onMove); map.off("mouseup",onUp); map.dragging.enable(); document.body.classList.remove("grabbing"); clearSnapDots(); suppressMapClick=true; setTimeout(()=>{ suppressMapClick=false; },0); buildHandles(); drawAll(); syncControls(); };
-  map.on("mousemove",onMove); map.on("mouseup",onUp);
+  trackDrag(onMove,onUp);
 }
 function positionHandles(except){
   const p=selected(); if(!p) return; const P=makeP(p), meta=metaFor(p);
@@ -1194,8 +1605,7 @@ function positionHandles(except){
   const cen=[(hb.x1+hb.x2)/2,(hb.y1+hb.y2)/2];
   cornerHandles.forEach((h,i)=>{ if(h!==except) h.setLatLng(P(...cp[i]));
     const el=h.getElement(); if(el){ const d=cornerDir(P,cen,cp[i]); el.classList.toggle("nwse",d==="nwse"); el.classList.toggle("nesw",d==="nesw"); } });
-  const f=1.18;
-  rotateZones.forEach((h,i)=>{ const c=cp[i]; h.setLatLng(P(cen[0]+(c[0]-cen[0])*f, cen[1]+(c[1]-cen[1])*f));
+  rotateZones.forEach((h,i)=>{ const c=cp[i]; h.setLatLng(rotateZoneLL(P,cen,c));
     const el=h.getElement(); if(el){ const q=cornerQuad(P,cen,c); el.classList.remove("rz-tl","rz-tr","rz-br","rz-bl"); el.classList.add("rz-"+q); } });
 }
 function showHandles(){ if(!map.hasLayer(handleLayer)) handleLayer.addTo(map); }
@@ -1207,7 +1617,7 @@ function buildPenHandles(){
   pen.pts.forEach((pt,i)=>{
     const h=L.marker(pt,{icon:vertexIcon(),draggable:true,zIndexOffset:1000,keyboard:false}).addTo(handleLayer);
     h.on("dragstart",()=>document.body.classList.add("grabbing"));
-    h.on("drag",(e)=>{ pen.pts[i]=e.target.getLatLng(); drawAll(); });
+    h.on("drag",(e)=>{ const raw=e.target.getLatLng(), sp=snapPointToGrid(raw); pen.pts[i]=sp; if(sp!==raw) e.target.setLatLng(sp); drawAll(); });
     h.on("dragend",()=>{ document.body.classList.remove("grabbing"); syncControls(); });
     penHandles.push(h);
   });
@@ -1218,9 +1628,9 @@ function startPenDrag(pen,e){
   L.DomEvent.stopPropagation(e);
   const start=e.latlng, orig=pen.pts.map(pt=>L.latLng(pt.lat,pt.lng));
   map.dragging.disable(); document.body.classList.add("grabbing");
-  const onMove=(ev)=>{ const dLat=ev.latlng.lat-start.lat, dLng=ev.latlng.lng-start.lng; pen.pts=orig.map(pt=>L.latLng(pt.lat+dLat,pt.lng+dLng)); drawAll(); repositionPenHandles(); };
+  const onMove=(ev)=>{ const dLat=ev.latlng.lat-start.lat, dLng=ev.latlng.lng-start.lng; pen.pts=snapPenPtsToGrid(orig.map(pt=>L.latLng(pt.lat+dLat,pt.lng+dLng))); drawAll(); repositionPenHandles(); };
   const onUp=()=>{ map.off("mousemove",onMove); map.off("mouseup",onUp); map.dragging.enable(); document.body.classList.remove("grabbing"); syncControls(); };
-  map.on("mousemove",onMove); map.on("mouseup",onUp);
+  trackDrag(onMove,onUp);
 }
 
 /* ===== selection / add / remove ===== */
@@ -1243,13 +1653,22 @@ function setTool(t){
   document.getElementById("rulerHint").style.display = t==="ruler" ? "flex" : "none";
   document.getElementById("toolPen").classList.toggle("active", t==="pen");
   document.getElementById("penHint").style.display = t==="pen" ? "flex" : "none";
+  document.getElementById("toolMarker").classList.toggle("active", t==="marker");
+  document.getElementById("markerHint").style.display = t==="marker" ? "flex" : "none";
+  if(t==="marker") document.getElementById("gpsCapture").style.display = navigator.geolocation ? "" : "none";
+  const mbl=document.getElementById("mbToolsLbl");
+  if(mbl) mbl.textContent = ({select:"Select",rotate:"Rotate",ruler:"Ruler",pen:"Pen",marker:"Marker"})[t] || "Tools";
+  const mbtn=document.getElementById("mbTools");   // swap the slot icon to the active tool's (mirrors the tools sheet)
+  if(mbtn){ const src=document.querySelector('#toolsSheet .mt-btn[data-mtool="'+t+'"] svg'); const cur=mbtn.querySelector("svg"); if(src && cur) cur.outerHTML=src.outerHTML; }
+  syncToolsSheet();
   const gob=document.getElementById("gridOriginBtn");
   gob.classList.toggle("armed", t==="gridorigin");
   gob.querySelector(".lbl").textContent = t==="gridorigin" ? "Click a point…" : "Set origin";
   const gab=document.getElementById("gridAlignBtn");
   gab.classList.toggle("armed", t==="gridalign");
   gab.querySelector(".lbl").textContent = t==="gridalign" ? "Click 2 points…" : "Align";
-  ["select","rotate","ruler","pen","gridorigin","gridalign"].forEach(k=>document.body.classList.toggle("tool-"+k, t===k));   // cursor reflects the active tool (see CSS), overriding Leaflet's per-path pointer
+  ["select","rotate","ruler","pen","marker","gridorigin","gridalign"].forEach(k=>document.body.classList.toggle("tool-"+k, t===k));
+  if(isMobileW() && (t==="gridorigin"||t==="gridalign")) mobSheet(null);   // clear the sheet so the arming click can land on the map   // cursor reflects the active tool (see CSS), overriding Leaflet's per-path pointer
   if(t==="ruler"||t==="pen"){ if(selectedId!==null) deselect(); map.doubleClickZoom.disable(); }
   else { map.doubleClickZoom.enable(); }
   if(t!=="ruler") clearMeasure();
@@ -1338,7 +1757,7 @@ function redrawPenDraft(){
   }
   setPenLead();
 }
-function addPenPoint(latlng){ penDraft.push(latlng); penGhostLayer.clearLayers(); redrawPenDraft(); }
+function addPenPoint(latlng){ penDraft.push(snapPointToGrid(latlng)); penGhostLayer.clearLayers(); redrawPenDraft(); }
 function undoPenPoint(){ if(penDraft.length) penDraft.pop(); penGhostLayer.clearLayers(); redrawPenDraft(); }
 function clearPenDraft(){ penDraft=[]; penDraftLayer.clearLayers(); penGhostLayer.clearLayers(); setPenLead(); }
 function finishPen(){
@@ -1349,6 +1768,7 @@ function finishPen(){
 function penGhost(latlng){
   penGhostLayer.clearLayers();
   if(tool!=="pen" || penDraft.length===0) return;
+  latlng=snapPointToGrid(latlng);   // preview lands where the click will
   const last=penDraft[penDraft.length-1];
   L.polyline([last,latlng],{color:"#f5f3ee",weight:2,opacity:0.6,dashArray:"4 6",interactive:false}).addTo(penGhostLayer);
   let total=0; for(let i=1;i<penDraft.length;i++) total+=distMetres(penDraft[i-1],penDraft[i]);
@@ -1358,9 +1778,10 @@ function penGhost(latlng){
 }
 map.on("click",(e)=>{
   if(suppressMapClick){ suppressMapClick=false; return; }
+  if(isMobileW() && mobSheetOpen() && tool!=="gridorigin" && tool!=="gridalign"){ mobSheet(null); return; }   // tap the map to put a sheet away (armed grid clicks pass through)
   if(tool==="ruler") addRulerPoint(e.latlng);
   else if(tool==="pen") addPenPoint(e.latlng);
-  else if(tool==="gridorigin"){ gridOrigin=e.latlng; drawGrid(); setTool("select"); }
+  else if(tool==="marker"){ addMarkerAt(e.latlng); } else if(tool==="gridorigin"){ gridOrigin=e.latlng; drawGrid(); setTool("select"); }
   else if(tool==="gridalign") addAlignPoint(e.latlng);
   else if(selectedId!==null) deselect();
 });
@@ -1419,9 +1840,10 @@ function toggleGrid(){
   drawGrid();
 }
 map.on("moveend zoomend",drawGrid);
+map.on("zoomend",()=>positionHandles(null));   // rotate hotspots sit at a pixel offset, so re-place them after a zoom
 function makePresetPitch(pr,opts){
   opts=opts||{};
-  const p={ id:(opts.id!=null?opts.id:-1), type:pr.type, anchor:(opts.anchor||map.getCenter()), bearing:90, scale:1.0, paint:(opts.paint||PAINTS[0]) };
+  const p={ id:(opts.id!=null?opts.id:-1), type:pr.type, anchor:(opts.anchor||map.getCenter()), bearing:(pr.type==="rounders"?0:90), scale:1.0, paint:(opts.paint||PAINTS[0]) };
   if(pr.type==="football") p.format=pr.format;
   if(pr.type==="sprint"){ p.laneCount=6; p.laneWidth=1.22; p.length=(pr.len||100); p.gradations=false; }
   if(pr.type==="track400"){ p.laneCount=8; p.laneWidth=1.22; p.straight=pr.reg.straight; p.bendR=pr.reg.bendR; p.regStraight=pr.reg.straight; p.regBendR=pr.reg.bendR; p.regLap=pr.reg.lap; p.staggers=[2]; }
@@ -1434,8 +1856,9 @@ function addPreset(presetId){
   const paint = pr.type==="rounders" ? PAINTS[pitches.length%PAINTS.length] : PAINTS[0];
   const p=makePresetPitch(pr,{id:nextId++, paint});
   pitches.push(p); if(map.getZoom()<17) map.setZoom(18); selectPitch(p.id);
+  if(isMobileW()) mobSheet(null);   // put the Add sheet away so the dropped pitch is visible
 }
-function removeSelected(){ if(selectedId===null) return; pitches=pitches.filter(p=>p.id!==selectedId); pens=pens.filter(p=>p.id!==selectedId); selectedId=null; removeHandles(); drawAll(); syncControls(); }
+function removeSelected(){ if(selectedId===null) return; pitches=pitches.filter(p=>p.id!==selectedId); pens=pens.filter(p=>p.id!==selectedId); markers=markers.filter(m=>m.id!==selectedId); selectedId=null; removeHandles(); drawAll(); syncControls(); }
 
 /* ===== templates drawer ===== */
 let drawerCat="All", drawerOpen=false;
@@ -1475,30 +1898,44 @@ const bearingSlider=document.getElementById("bearingSlider"), scaleSlider=docume
       laneCount=document.getElementById("laneCount"), lw100=document.getElementById("lw100"), lw122=document.getElementById("lw122"), trackLength=document.getElementById("trackLength");
 const show=(id,on)=>{ document.getElementById(id).style.display = on?"":"none"; };
 
+const MK_ROWS=["rowMkLabel","rowMkNote","rowMkCoords","rowMkSource","rowMkTies","rowMkFind"];
 function syncControls(skipMetres){
-  const p=selected(), pen=selectedPen();
-  const has=!!p, hasPen=!!pen;
-  document.getElementById("fitObject").disabled = !(has||hasPen);
+  const p=selected(), pen=selectedPen(), mk=selectedMarkerObj();
+  const has=!!p, hasPen=!!pen, hasMk=!!mk;
+  document.getElementById("fitObject").disabled = !(has||hasPen||hasMk);
+  document.getElementById("mbObjects").classList.toggle("sel", has||hasPen||hasMk);   // mobile: editing lives one obvious tap away
+  if(typeof renderMobActs==="function" && document.body.classList.contains("mob-settings")) renderMobActs();
   document.getElementById("editor").style.display = "";   // always present — empty titled tab when nothing is selected (no reflow)
 
   let countTxt;
-  if(pitches.length===0 && pens.length===0) countTxt="· empty";
-  else { const parts=[]; if(pitches.length) parts.push(pitches.length+" pitch"+(pitches.length>1?"es":"")); if(pens.length) parts.push(pens.length+" line"+(pens.length>1?"s":"")); countTxt="· "+parts.join(" · "); }
+  if(pitches.length===0 && pens.length===0 && markers.length===0) countTxt="· empty";
+  else { const parts=[]; if(pitches.length) parts.push(pitches.length+" pitch"+(pitches.length>1?"es":"")); if(pens.length) parts.push(pens.length+" line"+(pens.length>1?"s":"")); if(markers.length) parts.push(markers.length+" marker"+(markers.length>1?"s":"")); countTxt="· "+parts.join(" · "); }
   if(has) countTxt += " · "+labelFor(p);
   else if(hasPen) countTxt += " · line";
+  else if(hasMk) countTxt += " · marker "+mk.label;
   document.getElementById("count").textContent=countTxt;
   renderPitchList();
 
   const emptyEl=document.getElementById("editorEmpty");
-  if(!has && !hasPen){
+  if(!has && !hasPen && !hasMk){
     emptyEl.style.display="";
-    ["rowBearing","rowSize","rowFbScale","rowScaleOut","rowLanes","rowSprintMarks","rowLength","rowOvalScale","rowOval","rowMirror","rowStagger","rowBaseline","rowPaint","rowAnchor"].forEach(id=>show(id,false));
+    ["rowBearing","rowSize","rowFbScale","rowScaleOut","rowLanes","rowSprintMarks","rowLength","rowOvalScale","rowOval","rowMirror","rowStagger","rowBaseline","rowPaint","rowAnchor","rowPitchTies",...MK_ROWS].forEach(id=>show(id,false));
     return;
   }
   emptyEl.style.display="none";
 
+  if(hasMk){
+    ["rowBearing","rowSize","rowFbScale","rowScaleOut","rowLanes","rowSprintMarks","rowLength","rowOvalScale","rowOval","rowMirror","rowStagger","rowBaseline","rowPaint","rowAnchor","rowPitchTies"].forEach(id=>show(id,false));
+    MK_ROWS.forEach(id=>show(id,true));
+    document.getElementById("mkLabel").value=mk.label;
+    document.getElementById("mkNote").value=mk.note||"";
+    document.getElementById("mkCoords").textContent=mk.anchor.lat.toFixed(6)+", "+mk.anchor.lng.toFixed(6);
+    document.getElementById("mkSource").textContent = mk.source==="gps" ? "GPS \u00b1"+(mk.accuracy!=null?mk.accuracy:"?")+" m" : "Manual";
+    document.getElementById("mkTies").innerHTML=markerTiesHTML(mk);
+    return;
+  }
   if(hasPen){
-    ["rowBearing","rowSize","rowFbScale","rowScaleOut","rowLanes","rowSprintMarks","rowLength","rowOvalScale","rowOval","rowMirror","rowStagger","rowBaseline"].forEach(id=>show(id,false));
+    ["rowBearing","rowSize","rowFbScale","rowScaleOut","rowLanes","rowSprintMarks","rowLength","rowOvalScale","rowOval","rowMirror","rowStagger","rowBaseline","rowPitchTies",...MK_ROWS].forEach(id=>show(id,false));
     show("rowPaint",true); show("rowAnchor",true);
     document.querySelector("#rowAnchor label").textContent="Length";
     document.querySelectorAll(".swatch").forEach(sw=>sw.setAttribute("aria-pressed",String(sw.dataset.c===pen.paint)));
@@ -1507,6 +1944,7 @@ function syncControls(skipMetres){
   }
   if(!has) return;
 
+  MK_ROWS.forEach(id=>show(id,false));
   show("rowBearing",true); show("rowPaint",true); show("rowAnchor",false);
   const isRounders=p.type==="rounders", isFootball=p.type==="football", isSprint=p.type==="sprint", isOval=p.type==="track400"||p.type==="trackq", isTrack=p.type==="sprint"||p.type==="track400"||p.type==="trackq", isRugby=p.type==="rugby";
   show("rowSize", isRounders);
@@ -1516,6 +1954,9 @@ function syncControls(skipMetres){
   show("rowLength", isSprint);
   show("rowOvalScale", isOval);
   show("rowScaleOut", isRounders||isFootball||isRugby||isOval);
+  const tieMk=markers.filter(m=>!m.hidden);
+  show("rowPitchTies",(isFootball||isSprint) && tieMk.length>0);
+  if((isFootball||isSprint) && tieMk.length>0) document.getElementById("pitchTies").innerHTML=pitchTiesHTML(p);
   show("rowOval", isOval);
   show("rowMirror", isOval);
   if(isOval) document.getElementById("mirrorBtn").classList.toggle("active", !!p.mirror);
@@ -1539,7 +1980,10 @@ function syncControls(skipMetres){
     scaleSlider.value=Math.round(p.scale*100);
     if(!skipMetres) roundersPct.value=Math.round(p.scale*100);
     document.getElementById("scaleOutLabel").textContent="Size";
-    document.getElementById("scaleOutVal").textContent=(ROUNDERS.baseDiamond*p.scale).toFixed(1)+" m";
+    const si=document.getElementById("sizeIn"); si.style.display="";
+    si.min=(ROUNDERS.baseDiamond*0.5).toFixed(1); si.max=ROUNDERS.baseDiamond.toFixed(1); si.step="0.1";
+    si.value=(ROUNDERS.baseDiamond*p.scale).toFixed(1);
+    document.getElementById("scaleOutVal").textContent="m";
   }
   if(isFootball||isRugby){
     const k=Math.round(p.scale*100);
@@ -1547,7 +1991,10 @@ function syncControls(skipMetres){
     document.getElementById("fbPct").value=k;
     const L=isFootball?FB[p.format].L:RUGBY[p.variant].len, W=isFootball?FB[p.format].W:RUGBY[p.variant].wid;
     document.getElementById("scaleOutLabel").textContent="Size";
-    document.getElementById("scaleOutVal").textContent=Math.round(L*p.scale)+" × "+Math.round(W*p.scale)+" m";
+    const si=document.getElementById("sizeIn"); si.style.display="";
+    si.min=Math.round(L*0.5); si.max=Math.round(L); si.step="1";
+    si.value=Math.round(L*p.scale);
+    document.getElementById("scaleOutVal").textContent="× "+Math.round(W*p.scale)+" m";
   }
   if(isTrack){ laneCount.value=p.laneCount; lw100.classList.toggle("active",Math.abs(p.laneWidth-1.0)<0.01); lw122.classList.toggle("active",Math.abs(p.laneWidth-1.22)<0.01); }
   if(isSprint){ trackLength.value=p.length; document.getElementById("trackLengthBar").value=p.length; document.getElementById("gradChk").checked=!!p.gradations; }
@@ -1557,6 +2004,7 @@ function syncControls(skipMetres){
     const sEl=document.getElementById("ovalStraight"), bEl=document.getElementById("ovalBend");
     sEl.max=p.regStraight.toFixed(2); bEl.max=p.regBendR.toFixed(2);
     if(!skipMetres){ sEl.value=p.straight.toFixed(1); bEl.value=p.bendR.toFixed(1); }
+    document.getElementById("sizeIn").style.display="none";
     document.getElementById("scaleOutLabel").textContent="Lap";
     document.getElementById("scaleOutVal").textContent = trackIsReg(p) ? p.regLap+" m" : "≈ "+Math.round(trackLap(p))+" m";
   }
@@ -1586,7 +2034,7 @@ const UNLOCK_ICON='<svg viewBox="0 0 16 16" width="13" height="13" fill="none" s
 let confirmDeleteId=null;
 const checkedIds=new Set(); let bulkConfirmDelete=false;
 function deleteObject(id){
-  pitches=pitches.filter(p=>p.id!==id); pens=pens.filter(p=>p.id!==id);
+  pitches=pitches.filter(p=>p.id!==id); pens=pens.filter(p=>p.id!==id); markers=markers.filter(m=>m.id!==id);
   if(selectedId===id){ selectedId=null; removeHandles(); }
   confirmDeleteId=null; drawAll(); syncControls();
 }
@@ -1604,11 +2052,11 @@ function rowActions(o, kind){
 }
 function renderPitchList(){
   const el=document.getElementById("pitchlist");
-  const all=[...pitches,...pens];
+  const all=[...pitches,...pens,...markers];
   for(const id of [...checkedIds]) if(!all.some(o=>o.id===id)) checkedIds.delete(id);   // prune gone objects
   if(all.length===0){ bulkConfirmDelete=false; el.innerHTML='<div class="pl-head">Pitches &amp; lines</div><div class="pl-empty">Nothing yet — open <b>Templates</b> to add a pitch or track, or use the pen tool to draw a line.</div>'; return; }
   const nChecked=checkedIds.size;
-  let head='<div class="pl-head pl-head-bar"><span class="pl-htext">Pitches &amp; lines</span><span class="pl-right">';
+  let head='<div class="pl-head pl-head-bar"><span class="pl-htext">Pitches, lines &amp; markers</span><span class="pl-right">';
   if(bulkConfirmDelete && nChecked>0){
     head+='<span class="pl-confirm">Delete '+nChecked+'?<button class="pl-yes" data-bulk="confirmdel" title="Confirm delete">✓</button><button class="pl-no" data-bulk="canceldel" title="Keep">✕</button></span>';
   } else {
@@ -1620,9 +2068,10 @@ function renderPitchList(){
   }
   head+='<input type="checkbox" id="plSelectAll" class="pl-check" aria-label="Select all"></span></div>';
   let html=head;
-  const rowHtml=(o,kind,name)=>'<div class="pl-row'+(o.id===selectedId?" sel":"")+(o.hidden?" is-hidden":"")+'" data-id="'+o.id+'" data-kind="'+kind+'"><span class="pl-sw" style="background:'+o.paint+'"></span><span class="pl-name">'+name+'</span>'+rowActions(o,kind)+'<input type="checkbox" class="pl-check" data-id="'+o.id+'"'+(checkedIds.has(o.id)?" checked":"")+' aria-label="Select"></div>';
+  const rowHtml=(o,kind,name)=>'<div class="pl-row'+(o.id===selectedId?" sel":"")+(o.hidden?" is-hidden":"")+'" data-id="'+o.id+'" data-kind="'+kind+'"><span class="pl-sw" style="background:'+o.paint+'"></span><span class="pl-name">'+name+'</span><span class="pl-state">'+(o.hidden&&o.locked?"hidden · locked":o.hidden?"hidden":o.locked?"locked":"")+'</span>'+rowActions(o,kind)+'<input type="checkbox" class="pl-check" data-id="'+o.id+'"'+(checkedIds.has(o.id)?" checked":"")+' aria-label="Select"></div>';
   for(const p of pitches) html+=rowHtml(p,"pitch",labelFor(p));
   for(const pen of pens) html+=rowHtml(pen,"pen","Line · "+penLength(pen).toFixed(0)+" m");
+  for(const mk of markers) html+=rowHtml({...mk,paint:MARKER_COLOR},"marker","Marker "+mk.label+(mk.note?" · "+mk.note:""));
   el.innerHTML=html;
   const master=document.getElementById("plSelectAll");
   if(master){ master.checked=nChecked>0 && nChecked===all.length; master.indeterminate=nChecked>0 && nChecked<all.length; }
@@ -1630,9 +2079,9 @@ function renderPitchList(){
     if(e.target.closest(".pl-act, .pl-confirm, .pl-check")) return;   // buttons / tickbox handle their own clicks
     confirmDeleteId=null;
     const id=+r.dataset.id, kind=r.dataset.kind;
-    const o = kind==="pen" ? pens.find(x=>x.id===id) : pitches.find(x=>x.id===id);
+    const o = kind==="pen" ? pens.find(x=>x.id===id) : kind==="marker" ? markers.find(x=>x.id===id) : pitches.find(x=>x.id===id);
     if(!o || o.locked || o.hidden){ renderPitchList(); return; }   // protected/hidden: not selectable from the row
-    if(kind==="pen") selectPen(id); else selectPitch(id);
+    if(kind==="pen") selectPen(id); else if(kind==="marker") selectMarker(id); else selectPitch(id);
   }));
   el.querySelectorAll(".pl-check").forEach(cb=>cb.addEventListener("change",(e)=>{
     e.stopPropagation();
@@ -1646,7 +2095,7 @@ function renderPitchList(){
   el.querySelectorAll(".pl-acts [data-act], .pl-row .pl-confirm button").forEach(b=>b.addEventListener("click",(e)=>{
     e.stopPropagation();
     const id=+b.dataset.id, act=b.dataset.act;
-    const o = pitches.find(x=>x.id===id) || pens.find(x=>x.id===id);
+    const o = pitches.find(x=>x.id===id) || pens.find(x=>x.id===id) || markers.find(x=>x.id===id);
     if(act==="ref"){ openReference(id); }
     else if(act==="del"){ confirmDeleteId=id; renderPitchList(); }
     else if(act==="canceldel"){ confirmDeleteId=null; renderPitchList(); }
@@ -1676,6 +2125,11 @@ scaleSlider.addEventListener("input",(e)=>{ const p=selected(); if(!p||p.type!==
 roundersPct.addEventListener("change",(e)=>{ const p=selected(); if(!p||p.type!=="rounders") return; let v=parseFloat(e.target.value); if(isNaN(v)) v=Math.round(p.scale*100); v=Math.max(50,Math.min(100,v)); e.target.value=Math.round(v); p.scale=v/100; drawAll(); positionHandles(null); syncControls(true); });
 document.getElementById("fbScale").addEventListener("input",(e)=>{ const p=selected(); if(!p||(p.type!=="football"&&p.type!=="rugby")) return; p.scale=+e.target.value/100; drawAll(); positionHandles(null); syncControls(); });
 document.getElementById("fbPct").addEventListener("change",(e)=>{ const p=selected(); if(!p||(p.type!=="football"&&p.type!=="rugby")) return; p.scale=clampNum(e.target.value,50,100,Math.round(p.scale*100))/100; drawAll(); positionHandles(null); syncControls(); });
+document.getElementById("sizeIn").addEventListener("change",(e)=>{ const p=selected(); if(!p) return;
+  if(p.type==="rounders"){ const base=ROUNDERS.baseDiamond; p.scale=clampNum(e.target.value, base*0.5, base, base*p.scale)/base; }
+  else if(p.type==="football"||p.type==="rugby"){ const L=p.type==="football"?FB[p.format].L:RUGBY[p.variant].len; p.scale=clampNum(e.target.value, L*0.5, L, L*p.scale)/L; }
+  else return;
+  drawAll(); positionHandles(null); syncControls(); });
 
 function clampNum(v,min,max,fb){ let n=parseFloat(v); if(isNaN(n)) n=fb; return Math.max(min,Math.min(max,n)); }
 laneCount.addEventListener("change",(e)=>{ const p=selected(); if(!p) return; p.laneCount=Math.round(clampNum(e.target.value,2,10,p.laneCount)); e.target.value=p.laneCount; drawAll(); positionHandles(null); syncControls(); });
@@ -1704,8 +2158,10 @@ function buildPlan(){
     app:"LineMarker", version:1,
     view:{ lat:map.getCenter().lat, lng:map.getCenter().lng, zoom:map.getZoom() },
     grid:{ on:gridOn, spacing:gridSpacing, bearing:gridBearing, snap:snapOn, origin: gridOrigin?{lat:gridOrigin.lat,lng:gridOrigin.lng}:null },
+    imagery: imageryId,
     pitches: pitches.map(p=>({ ...p, anchor:{lat:p.anchor.lat, lng:p.anchor.lng} })),
-    pens: pens.map(pn=>({ id:pn.id, kind:"pen", paint:pn.paint, hidden:!!pn.hidden, locked:!!pn.locked, pts:pn.pts.map(ll=>({lat:ll.lat,lng:ll.lng})) }))
+    pens: pens.map(pn=>({ id:pn.id, kind:"pen", paint:pn.paint, hidden:!!pn.hidden, locked:!!pn.locked, pts:pn.pts.map(ll=>({lat:ll.lat,lng:ll.lng})) })),
+    markers: markers.map(m=>({ id:m.id, kind:"marker", label:m.label, note:m.note||"", anchor:{lat:m.anchor.lat,lng:m.anchor.lng}, source:m.source, accuracy:m.accuracy, hidden:!!m.hidden, locked:!!m.locked }))
   };
 }
 function savePlan(){
@@ -1722,7 +2178,9 @@ function applyPlan(data, opts){
   const keepId = opts.keepSelection ? selectedId : null;
   pitches = data.pitches.map(p=>({ ...p, anchor:L.latLng(p.anchor.lat, p.anchor.lng) }));
   pens = Array.isArray(data.pens) ? data.pens.map(pn=>({ id:pn.id, kind:"pen", paint:pn.paint||"#f5f3ee", hidden:!!pn.hidden, locked:!!pn.locked, pts:(pn.pts||[]).map(q=>L.latLng(q.lat,q.lng)) })) : [];
-  nextId = [...pitches,...pens].reduce((m,o)=>Math.max(m,o.id||0),0)+1;
+  markers = Array.isArray(data.markers) ? data.markers.map(m=>({ id:m.id, kind:"marker", label:m.label||"?", note:m.note||"", anchor:L.latLng(m.anchor.lat,m.anchor.lng), source:(m.source==="gps"?"gps":"manual"), accuracy:(typeof m.accuracy==="number"?m.accuracy:null), hidden:!!m.hidden, locked:!!m.locked })) : [];
+  if((data.imagery||"latest")!==imageryId) setImagery(data.imagery||"latest");
+  nextId = [...pitches,...pens,...markers].reduce((m,o)=>Math.max(m,o.id||0),0)+1;
   selectedId=null; removeHandles();
   if(data.grid){
     gridSpacing=data.grid.spacing||10; gridBearing=data.grid.bearing||0;
@@ -1787,6 +2245,8 @@ function updateUndoButtons(){
   const u=document.getElementById("undoBtn"), r=document.getElementById("redoBtn");
   if(u) u.disabled = undoStack.length===0;
   if(r) r.disabled = redoStack.length===0;
+  const mu=document.getElementById("mbUndo"); if(mu) mu.disabled = undoStack.length===0;
+  const mr=document.getElementById("msRedo"); if(mr) mr.disabled = redoStack.length===0;
 }
 function commitUndo(){
   if(restoring) return;
@@ -2064,6 +2524,7 @@ function contentBounds(){
   const pts=[];
   for(const p of pitches){ if(p.hidden) continue; const h=metaFor(p).hitBox, P=makeP(p); pts.push(P(h.x1,h.y1),P(h.x2,h.y1),P(h.x2,h.y2),P(h.x1,h.y2)); }
   for(const pen of pens){ if(pen.hidden) continue; for(const q of pen.pts) pts.push(q); }
+  for(const mk of markers){ if(!mk.hidden) pts.push(mk.anchor); }
   return pts.length ? L.latLngBounds(pts) : null;
 }
 function fitToContent(){
@@ -2075,6 +2536,8 @@ function selectedBounds(){
   if(p){ const h=metaFor(p).hitBox, P=makeP(p); return L.latLngBounds([P(h.x1,h.y1),P(h.x2,h.y1),P(h.x2,h.y2),P(h.x1,h.y2)]); }
   const pen=selectedPen();
   if(pen && pen.pts.length) return L.latLngBounds(pen.pts);
+  const mk=selectedMarkerObj();
+  if(mk) return mk.anchor.toBounds(40);
   return null;
 }
 function fitToSelected(){
@@ -2094,6 +2557,16 @@ function siteLayout(isPreview){
   if(document.getElementById("setoutLabels").checked){   // toggle governs the whole setting-out layer: cyan baseline, dots, diagonals AND labels
     pitches.forEach(p=>{ if(!p.hidden) drawSetout(p); });   // baseline, W×H, diagonals + labels per visible pitch
     pens.forEach(pen=>{ if(!pen.hidden && pen.pts.length>=2){ const mid=pen.pts[Math.floor(pen.pts.length/2)]; setoutTip(mid, parseFloat(penLength(pen).toFixed(1))+" m"); } });
+    markers.forEach(mk=>{ if(mk.hidden) return;   // labelled dots + coords; dashed tape ties to the nearest pitch's baseline ends
+      setoutTip(mk.anchor, mk.label+(mk.note?" \u2014 "+mk.note:"")+"<br>"+mk.anchor.lat.toFixed(6)+", "+mk.anchor.lng.toFixed(6));
+      let best=null,bd=Infinity;
+      for(const p of pitches){ if(p.hidden||(p.type!=="football"&&p.type!=="sprint")) continue; const d=distMetres(mk.anchor,p.anchor); if(d<bd){ bd=d; best=p; } }
+      if(best){ const be=baselineEnds(best);
+        for(const q of [be.s,be.e]){
+          L.polyline([mk.anchor,q],{color:MARKER_COLOR,weight:1.8,dashArray:"4 6",opacity:0.95,interactive:false}).addTo(setoutLayer);
+          setoutTip(_mid(mk.anchor,q), fmtM(distMetres(mk.anchor,q)));
+        } }
+    });
   }
   if(document.getElementById("labelsOnPrint").checked){ if(!map.hasLayer(refRoads)) map.addLayer(refRoads); if(!map.hasLayer(refPlaces)) map.addLayer(refPlaces); }
   else { map.removeLayer(refRoads); map.removeLayer(refPlaces); }   // off = clean aerial (default); on = keep labels for orientation
@@ -2246,6 +2719,23 @@ function drawBaselineHint(p){
   L.polyline([s,e],{color:SETOUT,weight:3,opacity:0.95,interactive:false}).addTo(geomLayer);
   L.circleMarker(s,{radius:4.5,color:SETOUT,weight:2,fillColor:"#fff",fillOpacity:1,interactive:false}).addTo(geomLayer);
 }
+function fmtM(n){ return parseFloat(n.toFixed(1))+" m"; }
+function baselineEnds(p){ const {b,c}=baselineInfo(p); return {s:c[b], e:c[(b+1)%4]}; }   // start/end of the chosen setting-out edge
+function markerTiesHTML(mk){
+  const out=[];
+  for(const o of markers){ if(o.id===mk.id||o.hidden) continue;
+    out.push("<b>"+mk.label+" \u2192 "+o.label+"</b> "+fmtM(distMetres(mk.anchor,o.anchor))+" \u00b7 "+Math.round(bearingBetween(mk.anchor,o.anchor))+"\u00b0"); }
+  for(const p of pitches){ if(p.hidden||(p.type!=="football"&&p.type!=="sprint")) continue;
+    const be=baselineEnds(p);
+    out.push("<b>\u2192 "+labelFor(p)+"</b> baseline start "+fmtM(distMetres(mk.anchor,be.s))+" \u00b7 end "+fmtM(distMetres(mk.anchor,be.e))); }
+  return out.length ? out.join("<br>") : "Add a second marker or a pitch to see tape ties.";
+}
+function pitchTiesHTML(p){
+  const be=baselineEnds(p), out=[];
+  for(const mk of markers){ if(mk.hidden) continue;
+    out.push("<b>"+mk.label+"</b> \u2192 baseline start "+fmtM(distMetres(mk.anchor,be.s))+" \u00b7 end "+fmtM(distMetres(mk.anchor,be.e))); }
+  return out.join("<br>");
+}
 function drawSetout(p){
   const P=makeP(p), m1=(n)=>parseFloat(n.toFixed(1))+" m";
   const base=(a,b)=>{ L.polyline([a,b],{color:"#000",weight:7,opacity:0.4,interactive:false}).addTo(setoutLayer);
@@ -2294,9 +2784,8 @@ const panel=document.getElementById("panel");
 function afterDockChange(){ setTimeout(()=>map.invalidateSize(), 280); }
 document.getElementById("panelToggle").addEventListener("click",()=>{
   if(window.innerWidth>=900){ document.body.classList.toggle("dock-collapsed"); document.getElementById("chev").textContent=document.body.classList.contains("dock-collapsed")?"▾":"▴"; afterDockChange(); }
-  else { panel.classList.toggle("collapsed"); document.getElementById("chev").textContent=panel.classList.contains("collapsed")?"+":"—"; }
+  else { mobSheet(null); }
 });
-document.getElementById("expandTab").addEventListener("click",()=>{ document.body.classList.remove("dock-collapsed"); afterDockChange(); });
 
 /* ===== panel split: drag the divider to move Object Settings up/down ===== */
 (function(){
@@ -2309,17 +2798,28 @@ document.getElementById("expandTab").addEventListener("click",()=>{ document.bod
 })();
 
 /* ===== guided tour ===== */
-const TOUR=[
+const TOUR_DESKTOP=[
   {kind:"card", foot:"welcome", title:"Welcome to LineMarker", body:"Plan your pitch markings on a real aerial view, true to scale and ready to set out on the grass."},
   {sel:"#searchPill", place:"bottom", title:"Find your grounds", body:"Search a school, postcode or town, or tap the crosshair to jump to where you are."},
   {sel:["#toolTemplates","#drawer"], place:"bottom", drawer:true, title:"Add a template", body:"Open Templates and tap a tile (rounders, football, rugby or a track) to drop it at true scale."},
-  {sel:"#panel", place:"left", title:"Objects & settings", body:"Every pitch and line is listed here: rename, hide, lock, reorder, and adjust the selected one."},
-  {sel:["#cursorTools","#editTools"], union:true, place:"bottom", title:"Edit tools", body:"Select, rotate, measure, draw, undo and redo."},
+  {sel:"#panel", place:"left", title:"Objects & settings", body:"Every pitch and line is listed here: hide, lock, open a reference sheet, and adjust the selected one below."},
+  {sel:["#cursorTools","#editTools"], union:true, place:"bottom", title:"Edit tools", body:"Select, rotate, measure, draw, drop reference markers, undo and redo."},
   {sel:"#tbarActions", place:"bottom", title:"Save, share, print", body:"Save to a file, copy a share link, or print to PDF with full setting-out marks."},
-  {sel:"#tbarZoom", place:"bottom", title:"View & zoom", body:"Fit the view to everything or just the selected object, zoom in and out, and toggle the metre grid."},
-  {kind:"card", foot:"help", title:"Help", body:"Replay this tour anytime from the ? button.", html:"<div class='tour-keys-h'>Keyboard &amp; mouse</div><div class='tour-keys'><span>Undo / redo</span><span><kbd>Ctrl</kbd>+<kbd>Z</kbd> / <kbd>Ctrl</kbd>+<kbd>Y</kbd></span><span>Zoom to an area</span><span><kbd>Shift</kbd>-drag</span><span>Pan the map</span><span>drag grass · right-drag</span><span>Finish a line</span><span>double-click</span><span>Close a panel</span><span><kbd>Esc</kbd></span></div>"}
+  {sel:"#tbarZoom", place:"bottom", title:"View & zoom", body:"Fit the view to everything or just the selected object, zoom in and out, toggle the metre grid, and switch the imagery date if clouds are in the way."},
+  {kind:"card", foot:"help", title:"Help", body:"Replay this tour anytime from the ? button.", html:"<div class='tour-keys-h'>Keyboard &amp; mouse</div><div class='tour-keys'><span>Undo / redo</span><span><kbd>Ctrl</kbd>+<kbd>Z</kbd> / <kbd>Ctrl</kbd>+<kbd>Y</kbd></span><span>Zoom to an area</span><span><kbd>Shift</kbd>-drag</span><span>Pan the map</span><span>drag grass · right-drag</span><span>Finish a line</span><span>double-click</span><span>Close a panel</span><span><kbd>Esc</kbd></span></div><button id='helpCursorBtn' class='tour-help-launch' type='button'>Point at a tool for help</button>"}
 ];
-const HELP_STEP=TOUR.length-1, FIRST_WALK=1;
+const TOUR_MOBILE=[
+  {kind:"card", foot:"welcome", title:"Welcome to LineMarker", body:"Plan your pitch markings on a real aerial view, true to scale and ready to set out on the grass."},
+  {sel:"#searchPill", place:"bottom", title:"Find your grounds", body:"Search a school, postcode or town, or tap the crosshair to jump to where you are."},
+  {sel:"#mbAdd", place:"top", title:"Add a template", body:"Tap a tile (rounders, football, rugby or a track) to drop it on the map at true scale."},
+  {sel:"#mbTools", place:"top", title:"Tools", body:"Switch between Select, Rotate, Ruler, Pen and Marker. The label shows which is active."},
+  {sel:"#mbObjects", place:"top", title:"Objects", body:"Everything on the plan. Tap an object to edit it — hide, lock, reference sheet and delete live in its settings."},
+  {sel:["#mbUndo","#mbMore"], union:true, place:"top", title:"Undo & more", body:"Undo is always one tap. More holds save, load, share, print, the metre grid, the imagery date and help."},
+  {sel:"#mFit", place:"top", title:"Zoom & fit", body:"Pinch to zoom the map. This button frames everything — tap it twice to frame just the selected object."},
+  {kind:"card", foot:"help", title:"Help", body:"Replay this tour anytime from More → Help."}
+];
+let TOUR=TOUR_DESKTOP;
+let HELP_STEP=TOUR.length-1; const FIRST_WALK=1;
 let tourI=-1, tourKeyH=null, tourDrawerOpened=false;
 const tourOv=document.getElementById("tourOverlay");
 const tourRings=document.getElementById("tourRings");
@@ -2355,6 +2855,7 @@ function renderTour(){
   document.getElementById("tourTitle").textContent=s.title;
   document.getElementById("tourBody").textContent=s.body;
   if(s.html) document.getElementById("tourBody").insertAdjacentHTML("beforeend", s.html);
+  if(s.foot==="help"){ const hb=document.getElementById("helpCursorBtn"); if(hb) hb.onclick=enterHelpMode; }
   document.getElementById("tourChkWrap").style.display=isCard?"flex":"none";
   document.getElementById("tourProg").style.display=isCard?"none":"";
   document.getElementById("tourProg").textContent=(tourI+1)+" / "+TOUR.length;
@@ -2400,6 +2901,9 @@ function tourPrimary(){
 }
 function tourBack(){ if(tourI===HELP_STEP) return; if(tourI>0) tourGoto(tourI-1); }
 function startTour(at){
+  TOUR = isMobileW() ? TOUR_MOBILE : TOUR_DESKTOP;   // ring the chrome that actually exists on this screen
+  HELP_STEP = TOUR.length-1;
+  if(at!=null && at>=TOUR.length) at=HELP_STEP;   // callers may hold a stale index if the lists ever differ in length
   if(tourKeyH) document.removeEventListener("keydown",tourKeyH,true);
   tourOv.classList.add("show");
   tourKeyH=(e)=>{ if(e.key==="Escape") endTour(); else if(e.key==="ArrowRight"){ e.preventDefault(); tourPrimary(); } else if(e.key==="ArrowLeft"){ e.preventDefault(); tourBack(); } };
@@ -2408,6 +2912,7 @@ function startTour(at){
   tourGoto(at||0);
 }
 function endTour(){
+  tourStore("lm_tour_done", true);                            // seen it (by finishing, skipping or closing) — ? now opens the Help card
   const cur=TOUR[tourI];
   if(cur && cur.drawer && tourDrawerOpened){ toggleDrawer(false); tourDrawerOpened=false; }
   tourOv.classList.remove("show");
@@ -2420,8 +2925,82 @@ document.getElementById("tourRestart").addEventListener("click", ()=>tourGoto(FI
 document.getElementById("tourSkip").addEventListener("click", endTour);
 document.getElementById("tourClose").addEventListener("click", endTour);
 document.getElementById("tourChk").addEventListener("change",(e)=>{ tourStore("lm_tour_suppress", e.target.checked); });
-document.getElementById("helpBtn").addEventListener("click",(e)=>{ e.stopPropagation(); startTour(tourGet("lm_tour_done")?HELP_STEP:0); });
+document.getElementById("helpBtn").addEventListener("click",(e)=>{ e.stopPropagation(); startTour((tourGet("lm_tour_done")||tourGet("lm_tour_suppress"))?HELP_STEP:0); });
 if(!tourGet("lm_tour_suppress")) startTour(0);
+
+/* ===== help-cursor mode ===== */
+const HELP_TEXT = {
+  toolSelect:{t:"Select and move",d:"Click a pitch or line to select it, then drag to reposition. Drag a corner to resize; the curved corner zones rotate it around its own centre."},
+  toolRotate:{t:"Rotate",d:"Turns the selected object around a pivot you can place anywhere, for lining up to an existing edge or boundary."},
+  toolRuler:{t:"Ruler",d:"Click points across the map to read distance and bearing between them. Double-click to finish."},
+  imgBtn:{t:"Imagery date",d:"Switches the aerial to an older Esri Wayback capture of the same imagery \u2014 useful when the current photo has cloud over your site. The choice saves with the plan."},
+  mbAdd:{t:"Add",d:"Opens the template picker \u2014 tap a tile to drop a pitch or track at true scale."},
+  mbTools:{t:"Tools",d:"Switches between Select, Rotate, Ruler, Pen and Marker. The label shows the active mode."},
+  mbObjects:{t:"Objects",d:"Lists everything on the plan and edits the selected object \u2014 a dot on this button means something is selected and ready to edit."},
+  mbUndo:{t:"Undo",d:"Steps back through your changes. Redo lives under More."},
+  mbMore:{t:"More",d:"Save, Load, Share, Print, the metre grid, the imagery date, Redo and Help."},
+  mFit:{t:"Fit view",d:"Frames everything on the field. Tap again quickly to frame just the selected object."},
+  toolMarker:{t:"Reference point",d:"Drops a labelled marker tied to a real feature on the ground (a fence corner, a gate post). The field crew uses it to find where the plan starts."},
+  toolPen:{t:"Pen",d:"Draw a freehand line one point at a time, for spectator lines, run-offs or anything off-template. Double-click to finish."},
+  undoBtn:{t:"Undo",d:"Steps back through your changes. Keyboard: Ctrl+Z."},
+  redoBtn:{t:"Redo",d:"Reapplies a change you have just undone. Keyboard: Ctrl+Y."},
+  savePlan:{t:"Save",d:"Saves the whole plan to a file on your device, to reopen later exactly as it is."},
+  loadPlanBtn:{t:"Load",d:"Opens a plan back in from a previously saved file."},
+  siteSheetBtn:{t:"Print",d:"Opens the print preview for the setting-out site sheet, where you can set print options and print it or save as PDF."},
+  sharePlan:{t:"Share",d:"Copies a link that carries the entire layout, so anyone who opens it sees the same plan."},
+  toolTemplates:{t:"Templates",d:"Opens the drawer of pitches and tracks. Tap a tile to drop that pitch onto the field at true scale."},
+  drawer:{t:"Templates drawer",d:"The picker of pitches and tracks. Filter with the category chips, tap a tile to drop one at true scale, or use a tile's Reference button to see its dimensions without placing it."},
+  fitView:{t:"Fit to all",d:"Moves and zooms the map to frame everything you have placed."},
+  fitObject:{t:"Fit to object",d:"Moves and zooms the map to frame just the selected object. Available once something is selected."},
+  zoomIn:{t:"Zoom in",d:"Zooms the map in."},
+  zoomOut:{t:"Zoom out",d:"Zooms the map out."},
+  toolGrid:{t:"Grid",d:"Lays a true-metre grid over the field. Its spacing, origin and snap controls appear in the grid bar."},
+  gridBar:{t:"Grid bar",d:"Sets the grid spacing, its origin and rotation, and whether objects snap to it."},
+  gridOriginBtn:{t:"Grid origin",d:"Sets where the grid starts from, by placing its origin point on the map."},
+  gridAlignBtn:{t:"Align grid",d:"Rotates the grid to line up with a pitch or an existing edge instead of true north."},
+  gridNorthBtn:{t:"Grid to north",d:"Resets the grid back to true north."},
+  gridSnapBtn:{t:"Snap",d:"When on, dragged objects lock to the grid lines for square, parallel layouts."},
+  helpBtn:{t:"Help",d:"Opens this panel, with the guided tour and the keyboard shortcuts."},
+  searchPill:{t:"Search",d:"Type a school, postcode or town to jump the map there."},
+  locBtn:{t:"My location",d:"Recentres the map on your current location."},
+  panel:{t:"Objects panel",d:"Lists every pitch and line you have added: hide, lock, open a reference sheet, tick rows for bulk actions, and adjust the selected object's settings below."}
+};
+let helpMoveH=null, helpKeyH=null, helpClickH=null;
+const helpHint=document.getElementById("helpHint"), helpBubble=document.getElementById("helpBubble");
+function helpEntryFor(node){
+  while(node && node!==document.body){ if(node.id && HELP_TEXT[node.id]) return HELP_TEXT[node.id]; node=node.parentElement; }
+  return null;
+}
+function enterHelpMode(){
+  if(isMobileW()) return;   // hover-to-help is desktop-only — there's no hover on touch
+  endTour();
+  document.body.classList.add("help-mode");
+  helpMoveH=(e)=>{
+    const ent=helpEntryFor(e.target);
+    if(!ent){ helpBubble.style.display="none"; return; }
+    helpBubble.innerHTML="<b></b>"; helpBubble.firstChild.textContent=ent.t;
+    helpBubble.insertAdjacentText("beforeend", ent.d);
+    helpBubble.style.display="block";
+    const bw=helpBubble.offsetWidth, bh=helpBubble.offsetHeight;
+    let L=e.clientX+16, T=e.clientY+16;
+    if(L+bw>innerWidth-8) L=e.clientX-bw-16;
+    if(T+bh>innerHeight-8) T=e.clientY-bh-16;
+    helpBubble.style.left=Math.max(8,L)+"px"; helpBubble.style.top=Math.max(8,T)+"px";
+  };
+  helpKeyH=(e)=>{ if(e.key==="Escape"){ e.preventDefault(); exitHelpMode(); } };
+  helpClickH=(e)=>{ e.preventDefault(); e.stopPropagation(); exitHelpMode(); };
+  document.addEventListener("mousemove", helpMoveH);
+  document.addEventListener("keydown", helpKeyH, true);
+  setTimeout(()=>document.addEventListener("click", helpClickH, true), 0);
+}
+function exitHelpMode(){
+  document.body.classList.remove("help-mode");
+  helpBubble.style.display="none";
+  if(helpMoveH) document.removeEventListener("mousemove", helpMoveH);
+  if(helpKeyH) document.removeEventListener("keydown", helpKeyH, true);
+  if(helpClickH) document.removeEventListener("click", helpClickH, true);
+  helpMoveH=helpKeyH=helpClickH=null;
+}
 
 document.getElementById("zoomIn").addEventListener("click",()=>map.zoomIn());
 document.getElementById("zoomOut").addEventListener("click",()=>map.zoomOut());
@@ -2429,6 +3008,28 @@ document.getElementById("toolSelect").addEventListener("click",()=>setTool("sele
 document.getElementById("toolRotate").addEventListener("click",()=>setTool(tool==="rotate"?"select":"rotate"));
 document.getElementById("toolRuler").addEventListener("click",()=>setTool(tool==="ruler"?"select":"ruler"));
 document.getElementById("toolPen").addEventListener("click",()=>setTool(tool==="pen"?"select":"pen"));
+document.getElementById("toolMarker").addEventListener("click",()=>setTool(tool==="marker"?"select":"marker"));
+document.getElementById("mkLabel").addEventListener("change",(e)=>{ const mk=selectedMarkerObj(); if(!mk) return; const v=e.target.value.trim().slice(0,3); if(v) mk.label=v; e.target.value=mk.label; drawAll(); syncControls(); });
+document.getElementById("mkNote").addEventListener("change",(e)=>{ const mk=selectedMarkerObj(); if(!mk) return; mk.note=e.target.value.trim(); drawAll(); syncControls(); });
+let mkDelArmed=null;
+document.getElementById("mkDelete").addEventListener("click",()=>{
+  const mk=selectedMarkerObj(); if(!mk) return;
+  const b=document.getElementById("mkDelete");
+  if(!mkDelArmed){ b.textContent="Delete?"; b.classList.add("armed"); mkDelArmed=setTimeout(()=>{ mkDelArmed=null; b.textContent="Delete"; b.classList.remove("armed"); },2600); return; }
+  clearTimeout(mkDelArmed); mkDelArmed=null; b.textContent="Delete"; b.classList.remove("armed");
+  deleteObject(mk.id);
+});
+document.getElementById("gpsCapture").addEventListener("click",()=>{
+  if(!navigator.geolocation) return;
+  const b=document.getElementById("gpsCapture"); b.disabled=true; b.textContent="Locating\u2026";
+  navigator.geolocation.getCurrentPosition((pos)=>{
+    b.disabled=false; b.textContent="Use GPS";
+    const mk=addMarkerAt(L.latLng(pos.coords.latitude,pos.coords.longitude),"gps",pos.coords.accuracy);
+    map.panTo(mk.anchor); commitUndo();
+    toast("Marker "+mk.label+" placed at your GPS position (\u00b1"+Math.round(pos.coords.accuracy)+" m)");
+  },(err)=>{ b.disabled=false; b.textContent="Use GPS"; toast("Couldn't get a GPS fix \u2014 "+(err&&err.code===1?"location permission was denied":"try again outdoors")); },
+  {enableHighAccuracy:true, timeout:15000, maximumAge:0});
+});
 document.getElementById("fitView").addEventListener("click",fitToContent);
 document.getElementById("fitObject").addEventListener("click",fitToSelected);
 document.getElementById("toolGrid").addEventListener("click",toggleGrid);
@@ -2438,7 +3039,7 @@ document.getElementById("drawerTiles").addEventListener("wheel",(e)=>{          
   const d=Math.abs(e.deltaY)>=Math.abs(e.deltaX)?e.deltaY:e.deltaX; if(!d) return;
   el.scrollLeft+=d; e.preventDefault();
 },{passive:false});
-document.getElementById("drawerHead").addEventListener("click",()=>toggleDrawer());
+document.getElementById("drawerHead").addEventListener("click",()=>{ if(isMobileW()) mobSheet(null); else toggleDrawer(); });
 document.getElementById("gridOriginBtn").addEventListener("click",()=>setTool(tool==="gridorigin"?"select":"gridorigin"));
 document.getElementById("gridAlignBtn").addEventListener("click",()=>setTool(tool==="gridalign"?"select":"gridalign"));
 document.getElementById("gridSnapBtn").addEventListener("click",()=>{ snapOn=!snapOn; document.getElementById("gridSnapBtn").classList.toggle("active",snapOn); });
@@ -2472,6 +3073,217 @@ syncControls();
 map.invalidateSize();
 loadFromHash();   // if opened from a Share link (#p=…), rebuild that plan
 lastSnap=snapState(); updateUndoButtons();   // undo baseline (after any shared plan has loaded)
+/* ===== mobile bottom bar & sheets ===== phones only — every button re-triggers an existing handler */
+function isMobileW(){ return window.innerWidth<900; }
+const MSHEETS=["objects","add","tools","more","grid"];
+function mobSheet(name){   // one sheet at a time; null closes all — the bar stays put so switching is one tap
+  MSHEETS.forEach(k=>document.body.classList.toggle("msheet-"+k, k===name));
+  if(name!=="objects"){ document.body.classList.remove("mob-settings"); mobDelArmed=false; }
+  document.getElementById("mbAdd").classList.toggle("on",name==="add");
+  document.getElementById("mbTools").classList.toggle("on",name==="tools");
+  document.getElementById("mbObjects").classList.toggle("on",name==="objects");
+  document.getElementById("mbMore").classList.toggle("on",name==="more"||name==="grid");
+}
+function mobSheetOpen(){ return MSHEETS.some(k=>document.body.classList.contains("msheet-"+k)); }
+function mobToggle(name){ mobSheet(document.body.classList.contains("msheet-"+name)?null:name); }
+function syncToolsSheet(){ document.querySelectorAll("#toolsSheet .mt-btn").forEach(b=>b.classList.toggle("active", b.dataset.mtool===tool)); }
+function syncMoreSheet(){
+  document.getElementById("msRedo").disabled = redoStack.length===0;
+  const g=document.getElementById("msGrid");
+  g.classList.toggle("on",gridOn); g.querySelector(".ms-lbl").textContent = gridOn ? "Grid on" : "Grid off";
+  document.getElementById("msGridSet").disabled = !gridOn;
+}
+document.getElementById("mbAdd").addEventListener("click",()=>{ renderDrawer(); mobToggle("add"); });
+document.getElementById("mbTools").addEventListener("click",()=>{ syncToolsSheet(); mobToggle("tools"); });
+document.getElementById("mbObjects").addEventListener("click",()=>{ if(!document.body.classList.contains("msheet-objects")){ if(selectedId!==null && mobSelectedObj()) mobShowSettings(); else mobShowList(); } mobToggle("objects"); });
+document.getElementById("mbUndo").addEventListener("click",()=>document.getElementById("undoBtn").click());
+document.getElementById("mbMore").addEventListener("click",()=>{ syncMoreSheet(); mobToggle("more"); });
+document.querySelectorAll("#toolsSheet .mt-btn").forEach(b=>b.addEventListener("click",()=>{ setTool(b.dataset.mtool); mobSheet(null); }));
+document.querySelectorAll(".msheet-grab").forEach(g=>g.addEventListener("click",()=>mobSheet(null)));
+document.getElementById("msSave").addEventListener("click",()=>{ mobSheet(null); document.getElementById("savePlan").click(); });
+document.getElementById("msLoad").addEventListener("click",()=>{ mobSheet(null); document.getElementById("loadPlanBtn").click(); });
+document.getElementById("msShare").addEventListener("click",()=>{ mobSheet(null); document.getElementById("sharePlan").click(); });
+document.getElementById("msPrint").addEventListener("click",()=>{ mobSheet(null); document.getElementById("siteSheetBtn").click(); });
+document.getElementById("msGrid").addEventListener("click",()=>{ toggleGrid(); syncMoreSheet(); });
+document.getElementById("msGridSet").addEventListener("click",()=>{ if(gridOn) mobSheet("grid"); });
+document.getElementById("msImagery").addEventListener("click",()=>{
+  mobSheet(null);
+  const m=document.getElementById("imgMenu");
+  m.style.top="auto"; m.style.left="50%"; m.style.bottom="calc(72px + env(safe-area-inset-bottom,0px))"; m.style.transform="translateX(-50%)";
+  m.classList.add("show");
+  renderImgMenu();   // after .show, so the change-collapse probes run
+});
+document.getElementById("msRedo").addEventListener("click",()=>{ document.getElementById("redoBtn").click(); syncMoreSheet(); });
+document.getElementById("msHelp").addEventListener("click",()=>{ mobSheet(null); document.getElementById("helpBtn").click(); });
+let mFitLast=0;
+document.getElementById("mFit").addEventListener("click",()=>{   // tap = fit all; a quick second tap = fit the selected object
+  const now=Date.now();
+  if(now-mFitLast<1600 && selectedId!==null) fitToSelected(); else fitToContent();
+  mFitLast=now;
+});
+window.addEventListener("resize",()=>{ if(!isMobileW() && mobSheetOpen()) mobSheet(null); });
+
+/* ===== mobile Objects sheet: drill-in (list <-> settings) + per-object actions ===== */
+var mobDelArmed=false;   // var (hoisted) — mobSheet touches this and could in principle run before this line
+function mobShowList(){ document.body.classList.remove("mob-settings"); mobDelArmed=false; renderPitchList(); }
+function mobShowSettings(){ document.body.classList.add("mob-settings"); mobDelArmed=false; renderMobActs(); }
+document.getElementById("mobBack").addEventListener("click",()=>{ mobShowList(); });
+function mobSelectedObj(){ return pitches.find(x=>x.id===selectedId) || pens.find(x=>x.id===selectedId) || markers.find(x=>x.id===selectedId) || null; }
+function renderMobActs(){
+  const el=document.getElementById("mobActs"); if(!el) return;
+  const o=mobSelectedObj();
+  if(!o){ el.innerHTML=""; return; }
+  const isPitch=pitches.some(x=>x.id===o.id), isMarker=markers.some(x=>x.id===o.id);
+  let h="";
+  if(isPitch) h+='<button type="button" data-mact="ref">Reference</button>';
+  h+='<button type="button" data-mact="hide"'+(o.hidden?' class="on"':'')+'>'+(o.hidden?"Show":"Hide")+'</button>';
+  h+='<button type="button" data-mact="lock"'+(o.locked?' class="on"':'')+'>'+(o.locked?"Unlock":"Lock")+'</button>';
+  if(!isMarker) h+='<button type="button" data-mact="del" class="'+(mobDelArmed?"confirm":"danger")+'">'+(mobDelArmed?"Tap to confirm":"Delete")+'</button>';   // markers keep their own two-tap delete in settings
+  el.innerHTML=h;
+  el.querySelectorAll("[data-mact]").forEach(b=>b.addEventListener("click",()=>{
+    const act=b.dataset.mact, obj=mobSelectedObj(); if(!obj) return;
+    if(act==="ref"){ mobSheet(null); openReference(obj.id); }
+    else if(act==="hide"){ obj.hidden=!obj.hidden; if(obj.hidden){ removeHandles(); } drawAll(); syncControls(); renderMobActs(); }
+    else if(act==="lock"){ obj.locked=!obj.locked; if(obj.locked){ removeHandles(); } drawAll(); syncControls(); renderMobActs(); }
+    else if(act==="del"){ if(!mobDelArmed){ mobDelArmed=true; renderMobActs(); } else { const id=obj.id; mobShowList(); deleteObject(id); } }
+  }));
+}
+/* rows: on mobile, tapping opens the object's settings even if hidden/locked (actions live there) */
+(function(){
+  const pl=document.getElementById("pitchlist");
+  pl.addEventListener("click",(e)=>{
+    if(!isMobileW() || !document.body.classList.contains("msheet-objects")) return;
+    const r=e.target.closest(".pl-row"); if(!r) return;
+    const id=+r.dataset.id, kind=r.dataset.kind;
+    const o = kind==="pen" ? pens.find(x=>x.id===id) : kind==="marker" ? markers.find(x=>x.id===id) : pitches.find(x=>x.id===id);
+    if(!o) return;
+    if(o.locked || o.hidden){   // desktop blocks these from selecting; on mobile open settings without map handles
+      e.stopPropagation();
+      selectedId=id; removeHandles(); drawAll(); syncControls(); mobShowSettings();
+    } else {
+      mobShowSettings();   // selection itself was handled by the row's own listener
+    }
+  }, true);
+})();
+
+/* ===== field navigator ===== distance is the primary signal; the arrow is a secondary aid that vanishes rather than lies.
+   Green requires BOTH a small distance AND a tight fix, and only ever claims "GPS says you're here". */
+const NAV_NEAR_M=3;       // within this of the marker = "at" it (subject to fix quality)
+const NAV_GOODFIX_M=5;    // fix must be at least this tight before green is allowed
+const NAV_POORFIX_M=15;   // worse than this: suppress any confident readout and say we're waiting
+let navMarkerId=null, navWatchId=null, navMap=null, navUser=null, navAccCircle=null, navTarget=null, navHeading=null, navHeadingSeen=0, navPos=null;
+function navOrient(e){
+  let h=null;
+  if(typeof e.webkitCompassHeading==="number" && !isNaN(e.webkitCompassHeading)) h=e.webkitCompassHeading;   // iOS: degrees clockwise from north
+  else if(e.absolute===true && typeof e.alpha==="number") h=(360-e.alpha)%360;                               // absolute alpha only — a relative alpha would lie
+  if(h!=null){ navHeading=h; navHeadingSeen=Date.now(); navRender(); }
+}
+function openNavigator(id){
+  const mk=markers.find(m=>m.id===id); if(!mk) return;
+  navMarkerId=id; navHeading=null; navHeadingSeen=0; navPos=null;
+  document.getElementById("navLabel").textContent=mk.label;
+  document.getElementById("navNote").textContent=mk.note || "No note on this marker — the planner can add one so you know what to look for.";
+  const st=document.getElementById("navState"); st.className="nav-state"; st.textContent="Waiting for GPS…";
+  document.getElementById("navDist").textContent="—"; document.getElementById("navUnit").textContent="";
+  document.getElementById("navAcc").textContent="GPS ± — m";
+  document.getElementById("navArrow").classList.add("off");
+  document.getElementById("navSetout").style.display="none"; document.getElementById("navSetoutBtn").style.display="none";
+  document.getElementById("navOverlay").classList.add("show"); document.getElementById("navOverlay").setAttribute("aria-hidden","false");
+  if(!navMap){
+    navMap=L.map("navMap",{zoomControl:false,attributionControl:false,dragging:false,scrollWheelZoom:false,doubleClickZoom:false,boxZoom:false,touchZoom:false,keyboard:false});
+    const item=IMAGERY.find(x=>x.id===imageryId)||IMAGERY[0];
+    L.tileLayer(item.url||wbUrl(item.id),{maxZoom:21,maxNativeZoom:19}).addTo(navMap);
+  }
+  if(navTarget) navMap.removeLayer(navTarget);
+  navTarget=L.marker(mk.anchor,{icon:markerIcon(mk,false),interactive:false}).addTo(navMap);
+  navMap.setView(mk.anchor,18);
+  setTimeout(()=>navMap.invalidateSize(),60);   // size it after the overlay is visible
+  if(navigator.geolocation){
+    navWatchId=navigator.geolocation.watchPosition(
+      (pos)=>{ navPos=pos; navRender(); },
+      ()=>{ st.textContent="No GPS fix — allow location access and step outside."; },
+      {enableHighAccuracy:true, maximumAge:0, timeout:20000});
+  } else st.textContent="This device has no location support.";
+  if(window.DeviceOrientationEvent && typeof DeviceOrientationEvent.requestPermission==="function"){
+    DeviceOrientationEvent.requestPermission().then(r=>{ if(r==="granted") window.addEventListener("deviceorientation",navOrient); }).catch(()=>{});   // iOS gesture-gated; declining just means no arrow
+  } else {
+    window.addEventListener("deviceorientationabsolute",navOrient);
+    window.addEventListener("deviceorientation",navOrient);
+  }
+}
+function closeNavigator(){
+  document.getElementById("navOverlay").classList.remove("show"); document.getElementById("navOverlay").setAttribute("aria-hidden","true");
+  if(navWatchId!=null && navigator.geolocation){ navigator.geolocation.clearWatch(navWatchId); navWatchId=null; }
+  window.removeEventListener("deviceorientationabsolute",navOrient);
+  window.removeEventListener("deviceorientation",navOrient);
+  navMarkerId=null;
+}
+function navRender(){
+  const mk=markers.find(m=>m.id===navMarkerId); if(!mk||!navPos) return;
+  const user=L.latLng(navPos.coords.latitude,navPos.coords.longitude), acc=navPos.coords.accuracy||9999;
+  const d=distMetres(user,mk.anchor), brg=bearingBetween(user,mk.anchor);
+  const note=mk.note||"reference point";
+  document.getElementById("navAcc").textContent="GPS ± "+(acc<10?acc.toFixed(1):Math.round(acc))+" m";
+  if(!navUser){
+    navUser=L.circleMarker(user,{radius:7,color:"#fff",weight:2,fillColor:"#4da3ff",fillOpacity:1,interactive:false}).addTo(navMap);
+    navAccCircle=L.circle(user,{radius:acc,color:"#4da3ff",weight:1,opacity:0.5,fillColor:"#4da3ff",fillOpacity:0.12,interactive:false}).addTo(navMap);
+  } else { navUser.setLatLng(user); navAccCircle.setLatLng(user); navAccCircle.setRadius(acc); }
+  navMap.fitBounds(L.latLngBounds([user,mk.anchor]).pad(0.35),{animate:false,maxZoom:19});
+  const st=document.getElementById("navState"), hero=document.getElementById("navDist"), unit=document.getElementById("navUnit"), btn=document.getElementById("navSetoutBtn");
+  if(acc>NAV_POORFIX_M){                                    // poor fix — don't pretend
+    st.className="nav-state"; st.textContent="Waiting for a better GPS fix (±"+Math.round(acc)+" m). Hold on, or move away from buildings and trees.";
+    hero.textContent="—"; unit.textContent=""; btn.style.display="none";
+  } else if(d<NAV_NEAR_M && acc<=NAV_GOODFIX_M){            // green needs BOTH
+    st.className="nav-state green"; st.textContent="GPS says you're here — stand on the "+note+", then Show setting-out.";
+    hero.textContent=d.toFixed(1); unit.textContent="m"; btn.style.display="";
+  } else if(d<NAV_NEAR_M){                                  // close, fuzzy fix — the real feature outranks GPS
+    st.className="nav-state amber"; st.textContent="Close — but GPS is fuzzy (±"+Math.round(acc)+" m). Find the "+note+" and stand on it.";
+    hero.textContent=d.toFixed(1); unit.textContent="m"; btn.style.display="";
+  } else {                                                  // on the way
+    st.className="nav-state"; st.textContent="Head toward the "+note+".";
+    hero.textContent = d>=100 ? String(Math.round(d)) : d.toFixed(1); unit.textContent="m"; btn.style.display="none";
+  }
+  const arrow=document.getElementById("navArrow");          // arrow only with a real, recent heading — otherwise it vanishes
+  if(navHeading!=null && Date.now()-navHeadingSeen<3000 && acc<=NAV_POORFIX_M && d>=NAV_NEAR_M){
+    arrow.classList.remove("off");
+    arrow.firstElementChild.style.transform="rotate("+Math.round(((brg-navHeading)%360+360)%360)+"deg)";
+  } else arrow.classList.add("off");
+}
+document.getElementById("navClose").addEventListener("click",closeNavigator);
+document.getElementById("navSetoutBtn").addEventListener("click",()=>{
+  const mk=markers.find(m=>m.id===navMarkerId); if(!mk) return;
+  const el=document.getElementById("navSetout");
+  el.innerHTML="<b>Tape from "+mk.label+"</b> — set the final position by tape and eye, not GPS.<br>"+markerTiesHTML(mk);
+  el.style.display="";
+});
+document.getElementById("mkFind").addEventListener("click",()=>{ const mk=selectedMarkerObj(); if(mk){ if(isMobileW()) mobSheet(null); openNavigator(mk.id); } });
+
+/* ===== fast styled tooltips ===== the native title delay is slow and off-theme; convert titles to a themed tip box */
+const tipbox=document.createElement("div"); tipbox.id="tipbox"; document.body.appendChild(tipbox);
+let tipTimer=null, tipEl=null;
+document.querySelectorAll("[title]").forEach(el=>{ if(el.closest("#map")) return; el.dataset.tip=el.getAttribute("title"); el.removeAttribute("title"); });
+function hideTip(){ clearTimeout(tipTimer); tipTimer=null; tipEl=null; tipbox.classList.remove("show"); }
+document.addEventListener("mouseover",(e)=>{
+  if(!e.target.closest || document.body.classList.contains("help-mode")) return;
+  let el=e.target.closest("[data-tip],[title]"); if(el===tipEl) return;
+  hideTip(); if(!el || el.closest("#map")) return;
+  if(el.hasAttribute("title")){ el.dataset.tip=el.getAttribute("title"); el.removeAttribute("title"); }   // catches rows/tiles created after startup
+  if(!el.dataset.tip) return;
+  tipEl=el;
+  tipTimer=setTimeout(()=>{
+    const r=el.getBoundingClientRect();
+    tipbox.textContent=el.dataset.tip; tipbox.classList.add("show");
+    tipbox.style.left="0px"; tipbox.style.top="0px";
+    const tw=tipbox.offsetWidth, th=tipbox.offsetHeight;
+    let x=r.left+r.width/2-tw/2, y=r.bottom+8;
+    if(y+th>innerHeight-4) y=r.top-th-8;
+    x=Math.max(4,Math.min(innerWidth-tw-4,x));
+    tipbox.style.left=x+"px"; tipbox.style.top=y+"px";
+  },160);
+});
+document.addEventListener("mouseout",(e)=>{ if(tipEl && !(e.relatedTarget && tipEl.contains(e.relatedTarget))) hideTip(); });
+document.addEventListener("mousedown",hideTip);
+
 document.addEventListener("mouseup", ()=>setTimeout(commitUndo,0));   // gestures (drag/rotate/scale) and click-actions — runs after their handlers
 document.addEventListener("change", ()=>setTimeout(commitUndo,0));    // typed-field and checkbox commits
 window.addEventListener("keydown",(e)=>{
